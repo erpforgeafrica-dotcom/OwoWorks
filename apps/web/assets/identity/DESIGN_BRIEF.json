@@ -1,0 +1,20 @@
+{
+  "brand": "OwoWorks",
+  "decision": "Rounded Naija-green tile; gold ring broken top-right by a rising arrow (money in motion). Serif wordmark, 'Works' in accent.",
+  "rejected": [
+    "Coin with ₦ glyph (currency-specific, excludes future regions)",
+    "Bridge arch literal (overused in fintech; HustleBridge/NaijaBridge collisions nearby)",
+    "Green-white-green flag bands (national symbol misuse risk)"
+  ],
+  "colors": { "tile": "#008751", "ring": "#d9b263", "arrow": "#f4dc9d" },
+  "clear_space": "ring height on all sides",
+  "minimum_size_px": 24,
+  "never": ["recolour", "stretch", "drop-shadow", "photography without scrim", "gold on green"],
+  "sources": ["assets/identity/mark.svg", "assets/identity/logo-dark.svg", "assets/identity/logo-light.svg"],
+  "exports": {
+    "og-image.png": { "source": "og-source.svg", "width": 1200, "height": 630 },
+    "favicon-180.png": { "source": "favicon.svg", "width": 180, "height": 180 },
+    "banner-dark.png": { "source": "banner-dark-source.svg", "width": 1600, "height": 480 },
+    "banner-light.png": { "source": "banner-light-source.svg", "width": 1600, "height": 480 }
+  }
+}

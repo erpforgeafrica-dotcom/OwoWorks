@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-NG" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OwoWorks — Naija Promotes the World. Earn Data &amp; Cash | Nigeria</title>
+<meta name="description" content="OwoWorks Nigeria pilot. Businesses fund campaigns; verified Nigerians promote from their own accounts with an #ad tag and earn mobile data first, cash as they grow.">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="OwoWorks — Naija Promotes the World.">
+<meta property="og:description" content="Verified Nigerian promoters earn mobile data and cash for disclosed, checked campaign posts.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_NG">
+<meta property="og:image" content="assets/identity/og-image.png">
+<meta name="theme-color" content="#04120b" id="themeColor">
+<link rel="icon" type="image/svg+xml" href="assets/identity/favicon.svg">
+<script>
+/* No-flash theme boot. Stored choice wins, then the OS preference, then dark.
+   Guarded so a blocked localStorage never breaks the page. Mirrors app.js. */
+(function () {
+  var theme = 'dark';
+  try {
+    var stored = localStorage.getItem('owoworks-theme');
+    if (stored === 'light' || stored === 'dark') theme = stored;
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+  } catch (e) { /* storage unavailable - stay dark */ }
+  document.documentElement.setAttribute('data-theme', theme);
+  var meta = document.getElementById('themeColor');
+  if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f7f2' : '#04120b');
+})();
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#main" aria-label="OwoWorks home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 26 26" role="img" aria-label="OwoWorks mark"><rect x="1" y="1" width="24" height="24" rx="7" fill="none" stroke="#f4dc9d" stroke-width="2.4"/><path d="M6 17 A7 7 0 0 1 20 17" fill="none" stroke="#d9b263" stroke-width="2.4" stroke-linecap="round"/><path d="M17.5 8.5 L20 6 L22.5 8.5 M20 6 L20 12" fill="none" stroke="#f4dc9d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="brand-name"><span class="ow">Owo</span><span class="works">Works</span><small>Nigeria pilot</small></span>
+    </a>
+    <nav class="links" aria-label="Main">
+      <a href="#earn">Virtual jobs</a>
+      <a href="#business">For business</a>
+      <a href="#partners">Partners</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#join">Join</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="theme-btn" type="button" id="themeBtn" aria-pressed="false" aria-label="Switch to light theme">Light</button>
+      <a class="btn ghost" href="#join" data-lane="promoter">Get a virtual job</a>
+      <a class="btn primary" href="#join" data-lane="owner">Fund a campaign</a>
+    </div>
+    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <button class="theme-btn" type="button" id="themeBtnMobile" aria-pressed="false" aria-label="Switch to light theme">Light theme</button>
+    <a href="#earn">Virtual jobs</a>
+    <a href="#business">For business</a>
+    <a href="#partners">Partners</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#join" data-lane="owner">Fund a campaign</a>
+    <a href="#join" data-lane="promoter">Get a virtual job</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Pilot build · Not yet open to the public</p>
+      <h1>No job? Student with free time? Your phone is your office.</h1>
+      <p class="lede">OwoWorks is building honest virtual jobs for Nigerians. You share a business post from your own account with a clear #ad tag. We check the post and the clicks, then you earn mobile data first and cash later as your level grows. No joining fee. No payment for recruiting people. No stories that touch. Nothing here is live yet — join the pilot list and we will call you when your city opens.</p>
+      <div class="hero-btns">
+        <a class="btn primary big" href="#join" data-lane="promoter">Join the promoter list</a>
+        <a class="btn outline big" href="#join" data-lane="owner">Fund a campaign</a>
+      </div>
+      <ul class="hero-facts">
+        <li><strong>Checked results only</strong>You are never paid for likes, follows or silent views.</li>
+        <li><strong>#ad on every paid post</strong>Clear disclosure, as the platforms require.</li>
+        <li><strong>Data before cash</strong>MTN, Glo and Airtel bundles land on your own line.</li>
+      </ul>
+    </div>
+
+    <div class="stage" id="stage">
+      <p class="stage-caption" id="stageCaption">Work on one side. Reward on the other.</p>
+      <div class="lane lane-coin">
+        <div class="orb" aria-hidden="true">
+          <div class="coin">
+            <div class="coin-face">
+              <span class="coin-glyph">₦</span>
+              <span class="coin-rim"></span>
+            </div>
+            <div class="coin-rim-bottom"></div>
+          </div>
+        </div>
+        <h2 class="lane-label">Reward</h2>
+      </div>
+      <div class="lane lane-data">
+        <div class="orb" aria-hidden="true">
+          <div class="data-orb">
+            <span class="data-bars"><i></i><i></i><i></i></span>
+            <span class="data-pulse"></span>
+          </div>
+        </div>
+        <h2 class="lane-label">Data</h2>
+      </div>
+      <p class="stage-note">Illustrative symbols. Not photographs of real users.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="earn">
+  <p class="eyebrow">Virtual jobs · simple tasks</p>
+  <h2>How a promoter earns</h2>
+  <ol class="steps">
+    <li>
+      <h3>Verify your phone</h3>
+      <p>One-time code by SMS or WhatsApp. We detect your network so data goes to the right line.</p>
+    </li>
+    <li>
+      <h3>Link your account</h3>
+      <p>Connect YouTube or Facebook so we can confirm the post is really yours. Minimum 200 followers at pilot.</p>
+    </li>
+    <li>
+      <h3>Take a task</h3>
+      <p>We give you a caption, a tracked link and a disclosure tag. You post it as yourself. Every task shows its exact naira price before you start.</p>
+    </li>
+    <li>
+      <h3>Get checked, then paid</h3>
+      <p>Automated checks, plus a human review of roughly one in ten. 48 to 72 hour hold, then data or cash. If the poster stays silent for 24 hours, your submission is approved automatically — your money never hangs on someone else's delay.</p>
+    </li>
+  </ol>
+  <div class="center">
+    <a class="btn primary big" href="#join" data-lane="promoter">Join the promoter list</a>
+  </div>
+</section>
+
+<section class="section dark" id="business">
+  <p class="eyebrow">For business</p>
+  <h2>Pay for outcomes you can count</h2>
+  <div class="cols2">
+    <ul class="ticks">
+      <li>Your budget is set aside before a campaign goes live, and unspent money returns to you. The campaign cannot spend what you did not fund.</li>
+      <li>Pay per checked click, sign-up or promo-code use. Follows, likes and views are never billed.</li>
+      <li>Every post carries #ad, so your brand stays inside platform rules.</li>
+      <li>Campaigns pause themselves at 90 percent of budget. Hard ceiling, not a promise.</li>
+    </ul>
+    <div class="panel">
+      <h3>Pilot terms</h3>
+      <p>Package price, margin floor and per-outcome price are still being set with pilot partners. Nothing is charged today.</p>
+      <a class="btn primary" href="#join" data-lane="owner">Register interest</a>
+    </div>
+  </div>
+</section>
+
+<section class="section dark" id="partners">
+  <p class="eyebrow">Partners</p>
+  <h2>Agencies, resellers, communities</h2>
+  <div class="cards3">
+    <div class="card">
+      <h3>Agencies and media buyers</h3>
+      <p>Bring business clients onto the platform. Commercial terms are agreed in writing per partner, never as a recruiting chain.</p>
+    </div>
+    <div class="card">
+      <h3>Data resellers</h3>
+      <p>Supply MTN, Glo or Airtel bundles through a licensed aggregator. Your discount becomes shared margin.</p>
+    </div>
+    <div class="card">
+      <h3>Communities</h3>
+      <p>Student, trader and rider groups. A quality bonus applies to cohorts with low fraud, not to recruitment volume.</p>
+    </div>
+  </div>
+  <div class="center">
+    <a class="btn primary" href="#join" data-lane="partner">Register as a partner</a>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <p class="eyebrow">Pricing</p>
+  <h2>Final prices are not published yet</h2>
+  <p class="lede">Publishing numbers before the pilot would be a guess, and we will not invent them. Pilot partners get written pricing once the margin model is measured.</p>
+  <div class="cards3">
+    <div class="card">
+      <h3>How promoter pay works</h3>
+      <p>Each checked outcome has a price. The promoter share, a fraud reserve, and the platform share come out of it. The split is fixed in code and tested, not decided per payout.</p>
+    </div>
+    <div class="card">
+      <h3>What sets the price</h3>
+      <p>Supply and demand per platform and niche, inside a floor and ceiling that keep margin above the configured minimum.</p>
+    </div>
+    <div class="card">
+      <h3>Withdrawal rules</h3>
+      <p>Data rewards go only to your own verified numbers. Cash needs identity checks, a minimum balance and a batched payout schedule.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <p class="eyebrow">Questions</p>
+  <h2>Straight answers</h2>
+  <div class="faq" id="faqList">
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">Do I get paid for followers or likes?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a1" role="region" aria-labelledby="faq-q1"><p>No. We do not sell, buy or pay for followers, likes or silent views. Payment is only for a click we can trace, a sign-up the business confirms, a promo-code use, or a post confirmed to exist with a disclosure tag.</p></div>
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">When would I actually be paid?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a2" role="region" aria-labelledby="faq-q2"><p>Not yet. The payout rails are still being built and checked with providers. The design is a 48 to 72 hour hold after a post is checked, then data to your own line, or cash after identity verification.</p></div>
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">Is this a pyramid scheme?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a3" role="region" aria-labelledby="faq-q3"><p>It is designed so it cannot become one. There is no joining fee, no payment for recruiting people, and no multi-level commission. Any future ambassador arrangement is a capped written contract tied to margin the team actually generated and to paid work, not signups.</p></div>
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">What stops people cheating?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a4" role="region" aria-labelledby="faq-q4"><p>One identity per account, minimum account age and followers, filters for automated clicks, a trust score, human review of a sample, payout holds, and clawback if a post is deleted or found fraudulent.</p></div>
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a5" id="faq-q5">Which networks can receive data?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a5" role="region" aria-labelledby="faq-q5"><p>MTN, Glo and Airtel at pilot, sent through a licensed aggregator rather than direct carrier integration. 9mobile is planned. Your network is confirmed with the aggregator before any bundle is sent.</p></div>
+    <button class="q" type="button" aria-expanded="false" aria-controls="faq-a6" id="faq-q6">Can I trust this site?<span aria-hidden="true">+</span></button>
+    <div class="a" id="faq-a6" role="region" aria-labelledby="faq-q6"><p>Judge what exists, not what is promised. This page is a pilot recruitment page during the build. No testimonials, no customer counts and no earnings figures appear here because none are proven yet.</p></div>
+  </div>
+</section>
+
+<section class="section dark" id="join">
+  <p class="eyebrow">Pilot list</p>
+  <h2>Register interest</h2>
+  <div class="tabs" role="radiogroup" aria-label="Register as">
+    <button class="tab active" type="button" role="radio" aria-checked="true" data-form="promoter" tabindex="0">Promoter</button>
+    <button class="tab" type="button" role="radio" aria-checked="false" data-form="owner" tabindex="-1">Business</button>
+    <button class="tab" type="button" role="radio" aria-checked="false" data-form="partner" tabindex="-1">Partner</button>
+  </div>
+
+  <form id="leadForm" novalidate>
+    <div class="grid2">
+      <label for="fName">Full name</label>
+      <input id="fName" name="name" type="text" autocomplete="name" required aria-describedby="formStatus">
+      <label for="fPhone">Phone number</label>
+      <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08XX XXX XXXX" required aria-describedby="formStatus">
+    </div>
+    <label for="fExtra" id="extraLabel">Your main platform</label>
+    <input id="fExtra" name="extra" type="text" placeholder="YouTube">
+    <label for="fNote">Anything we should know</label>
+    <input id="fNote" name="note" type="text" placeholder="City, or what you want to promote">
+    <p class="form-status" id="formStatus" role="status"></p>
+    <p class="fine">This pilot build has no server. Nothing you type is stored or sent, and no payment is collected anywhere on this page. A working sign-up service ships before the pilot opens.</p>
+    <button class="btn primary big" type="submit" id="submitBtn">Test this form</button>
+  </form>
+
+  <div class="success" id="successBox" hidden>
+    <h3>Form works — nothing was sent</h3>
+    <p id="successText"></p>
+    <p class="fine">There is no server behind this page yet, so your details did not reach OwoWorks and were not saved in your browser either. When the sign-up service is live, this form will post to it and you will get a reference by SMS.</p>
+    <button class="btn outline" type="button" id="againBtn">Run it again</button>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div>
+      <h2>OwoWorks</h2>
+      <p>Naija promotes the world. Money that works as hard as you do.</p>
+    </div>
+    <div>
+      <h2>Status</h2>
+      <p>Pilot build. Not yet open. No payment is processed on this site.</p>
+    </div>
+    <div>
+      <h2>Policy</h2>
+      <p>Every paid post carries a disclosure tag. No fake likes, follows or views are bought or sold.</p>
+    </div>
+  </div>
+  <p class="copy">OwoWorks is a pilot project. Earnings depend on checked outcomes and are not guaranteed. Terms, privacy policy and refund policy are published before the pilot opens.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

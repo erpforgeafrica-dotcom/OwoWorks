@@ -1,0 +1,25 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.cache/
+*.log
+!assets/**/*.log
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# proof artefacts that are large binaries (keep sources, ignore renders above 1MB)
+*.webm
+*.mp4
+
+# local data
+/tmp/
+/tmp-*/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,19 @@
+{
+  "name": "owoworks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OwoWorks — Naija promotes the world. Verified brand-promotion work, paid in mobile data and cash.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node apps/web/phone.test.mjs",
+    "site": "node scripts/checkSite.mjs",
+    "serve": "node scripts/serve.mjs",
+    "db:sql": "node scripts/validateSql.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.3"
+  }
+}

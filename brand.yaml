@@ -1,0 +1,29 @@
+name: OwoWorks
+one_liner: Naija promotes the world — and gets paid.
+status: pilot-prelaunch
+owner: erpforgeafrica-dotcom
+decided: 2026-10-02
+pronunciation: oh-woh-works
+etymology:
+  owo: money (Yoruba)
+  works: jobs that exist; work that is real; "it works"
+taglines:
+  promoter: Your phone is your office. Promote real brands, earn real data and cash.
+  business: Pay only for outcomes you can count.
+  trust: No joining fee. No payment for recruiting. No income promises. Ever.
+archetype: everyman-hero
+palette_source_of_truth: docs/BRAND.md
+assets:
+  logo_dark: apps/web/assets/identity/logo-dark.svg
+  logo_light: apps/web/assets/identity/logo-light.svg
+  favicon: apps/web/assets/identity/favicon.svg
+  favicon_png: apps/web/assets/identity/favicon-180.png
+  og_image: apps/web/assets/identity/og-image.png
+  banner_dark: apps/web/assets/identity/banner-dark.png
+  banner_light: apps/web/assets/identity/banner-light.png
+naming_record:
+  method: metaphor-driven candidates, web prior-art check each, decide with bench shown
+  rejected: [HustleBridge, NaijaBridge, NaijaVoice, NaijaStage, Aiki, WakaWorks, PromoteNaija, GigNaija, KudiBridge]
+  residual_risk: OWORKS near-spelling (unrelated class/country); trademark + CAC + domain UNVERIFIED
+artifacts_present: [brand.yaml, docs/BRAND.md, apps/web/assets/identity/*, apps/web, db/migrations]
+review_date: 2027-01-02
