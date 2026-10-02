@@ -5,7 +5,7 @@ build/
 coverage/
 .cache/
 *.log
-!assets/**/*.log
+!apps/web/assets/**/*.log
 
 # secrets — never commit
 .env
@@ -14,7 +14,11 @@ coverage/
 *.pem
 *.key
 
-# proof artefacts that are large binaries (keep sources, ignore renders above 1MB)
+# live backend keys: created at deploy time from config.example.js, never committed
+apps/web/config.js
+!apps/web/config.example.js
+
+# large binaries
 *.webm
 *.mp4
 

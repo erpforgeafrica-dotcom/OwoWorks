@@ -55,9 +55,12 @@ for (const f of html) {
 
   const assets = [...c.matchAll(/(?:href|src)="([^"#][^"]*)"/g)].map(m => m[1])
     .filter(u => !/^(https?:|mailto:|tel:)/.test(u));
-  const missing = [...new Set(assets.filter(u => !existsSync(join(WWW, u))) )];
+  // config.js is intentionally optional: it carries the live backend keys and
+  // is created at deploy time, never committed. Its absence means demo mode.
+  const required = assets.filter(u => u !== 'config.js');
+  const missing = [...new Set(required.filter(u => !existsSync(join(WWW, u))))];
   if (missing.length) bad('local assets', `missing: ${missing.join(', ')}`);
-  else if (assets.length) ok(`${assets.length} local asset(s) exist`);
+  else if (required.length) ok(`${required.length} local asset(s) exist (+ optional config.js)`);
 
   const buttons = (c.match(/<button\b/g) || []).length;
   const anchorBtns = (c.match(/class="[^"]*btn[^"]*"/g) || []).length;

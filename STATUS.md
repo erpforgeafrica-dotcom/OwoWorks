@@ -13,9 +13,11 @@ as OwoWorks and optimises the web surface; it does not re-prove the database.
 
 | Claim | Evidence |
 |---|---|
-| Migrations execute on real PostgreSQL | `npm run db:sql` in amplo + `db/ledger.test.mjs` 56/56 (see amplo `PROOF/`) |
-| Web surface passes integrity | `npm run site` in THIS repo (run before every commit) |
-| Phone validation correct | `npm test` — 17 tests incl. 12-digit regression |
+| Migrations execute on real PostgreSQL | `node scripts/migrateUp.mjs` — 0000–0002 APPLIED; `db/leads.test.mjs` 14/14 |
+| Abuse controls hold for every DB role | honeypot + consent freshness in trigger AND RLS (either alone suffices) |
+| Referrals pay zero, count queue only | schema + `docs/LEAD-CAPTURE.md` §3 (anti-MLM rule) |
+| Web surface passes integrity | `npm run site` (run before every commit) |
+| Phone validation correct | `npm test` — 17 phone + 20 lead-client tests |
 | Palette accessible | every pair in `docs/BRAND.md` §2 measured 2026-10-02, WCAG 2.2 AA |
 | Logo PNG exports genuine | dimensions read back from the files (see table below) |
 

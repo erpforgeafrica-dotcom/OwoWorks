@@ -395,6 +395,23 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .form-status.error { color: var(--danger); }
 .form-status.ok { color: var(--signal); }
 .fine { font-size: .82rem; color: var(--muted); margin-top: 14px; }
+.invite {
+  max-width: 620px; border: 1px solid var(--line-gold); border-radius: 4px;
+  padding: 14px 18px; margin: 0 0 18px;
+  background: linear-gradient(170deg, rgb(217 178 99 / .07), transparent 70%);
+}
+.invite p { margin: 0; font-size: .92rem; }
+.refbox {
+  margin-top: 18px; border-top: 1px solid var(--line); padding-top: 18px;
+}
+.refcode { font-size: 1.05rem; }
+.refcode strong {
+  font-family: Georgia, serif; letter-spacing: .12em; color: var(--gold);
+  background: rgb(217 178 99 / .1); padding: 2px 10px; border-radius: 3px;
+}
+[data-theme="light"] .refcode strong { color: var(--brand-deep); background: rgb(4 106 65 / .08); }
+#refLink { word-break: break-all; }
+.share-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .success {
   max-width: 620px; border: 1px solid var(--signal); border-radius: 4px;
   padding: 24px; background: rgb(62 207 142 / .06);

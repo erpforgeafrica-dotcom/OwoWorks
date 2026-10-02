@@ -8,12 +8,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node apps/web/phone.test.mjs",
+    "test": "node apps/web/phone.test.mjs && node apps/web/lead.test.mjs",
     "site": "node scripts/checkSite.mjs",
     "serve": "node scripts/serve.mjs",
     "db:sql": "node scripts/validateSql.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.2.17",
     "sharp": "^0.34.3"
   }
 }

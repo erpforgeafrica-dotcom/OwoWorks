@@ -221,6 +221,9 @@
 <section class="section dark" id="join">
   <p class="eyebrow">Pilot list</p>
   <h2>Register interest</h2>
+  <div class="invite" id="inviteBanner" hidden>
+    <p id="inviteText" role="status"></p>
+  </div>
   <div class="tabs" role="radiogroup" aria-label="Register as">
     <button class="tab active" type="button" role="radio" aria-checked="true" data-form="promoter" tabindex="0">Promoter</button>
     <button class="tab" type="button" role="radio" aria-checked="false" data-form="owner" tabindex="-1">Business</button>
@@ -244,9 +247,21 @@
   </form>
 
   <div class="success" id="successBox" hidden>
-    <h3>Form works — nothing was sent</h3>
+    <h3 id="successTitle">Form works — nothing was sent</h3>
     <p id="successText"></p>
-    <p class="fine">There is no server behind this page yet, so your details did not reach OwoWorks and were not saved in your browser either. When the sign-up service is live, this form will post to it and you will get a reference by SMS.</p>
+    <div class="refbox" id="refBox" hidden>
+      <p class="refcode">Your invite code: <strong id="refCode"></strong></p>
+      <p><a id="refLink" href="#join"></a></p>
+      <p class="fine" id="refPosition" role="status"></p>
+      <div class="share-row">
+        <button class="btn outline" type="button" id="copyRef">Copy invite link</button>
+        <a class="btn ghost" id="shareWa" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn ghost" id="shareTw" href="https://twitter.com/" target="_blank" rel="noopener">X</a>
+        <a class="btn ghost" id="shareFb" href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <p class="fine">Invites move you up the queue. They never earn cash by themselves — rewards come only from checked work. Anyone who promises otherwise is not us.</p>
+    </div>
+    <p class="fine" id="demoNote">There is no server behind this page yet, so your details did not reach OwoWorks and were not saved in your browser either. When the sign-up service is live, this form will post to it and you will get a reference by SMS.</p>
     <button class="btn outline" type="button" id="againBtn">Run it again</button>
   </div>
 </section>
@@ -271,6 +286,7 @@
   <p class="copy">OwoWorks is a pilot project. Earnings depend on checked outcomes and are not guaranteed. Terms, privacy policy and refund policy are published before the pilot opens.</p>
 </footer>
 
+<script src="config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

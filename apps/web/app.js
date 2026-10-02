@@ -89,6 +89,7 @@ const form = $('#leadForm');
 const status = $('#formStatus');
 const successBox = $('#successBox');
 const successText = $('#successText');
+const submitBtn = $('#submitBtn');
 let lane = 'promoter';
 
 function selectLane(name, focusTab) {
@@ -149,6 +150,145 @@ function normalisePhone(raw) {
    The status message always describes the field that receives focus. The old
    code let the last error overwrite the first while focus went to the first -
    announcing the wrong error to screen readers. */
+/* ---------- lead capture backend ----------
+   Live mode posts straight to Supabase PostgREST (no SDK, no dependency):
+   the anon key is public by design and RLS enforces append-only. Without
+   window.OWOWORKS (see config.example.js) the form stays in demo mode and
+   the page keeps saying so. */
+function backendConfig() {
+  const c = (typeof window !== 'undefined' && window.OWOWORKS) || null;
+  if (c && c.SUPABASE_URL && c.SUPABASE_ANON_KEY) return c;
+  return null;
+}
+
+function getRefFromLocation(search) {
+  const m = /[?&]ref=([A-Za-z0-9]{1,16})/.exec(search || '');
+  return m ? m[1].toUpperCase() : null;
+}
+
+function isReferralCodeFormat(code) {
+  return /^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/.test(code || '');
+}
+
+function getUtm(search) {
+  const q = new URLSearchParams(search || '');
+  return {
+    utm_source: q.get('utm_source') || null,
+    utm_medium: q.get('utm_medium') || null,
+    utm_campaign: q.get('utm_campaign') || null
+  };
+}
+
+function buildLeadPayload(o) {
+  return {
+    lane: o.lane,
+    full_name: o.name,
+    phone_e164: o.phone,
+    platform_extra: o.extra || null,
+    note: o.note || null,
+    referred_by_code: o.ref || null,
+    utm_source: o.utm.utm_source,
+    utm_medium: o.utm.utm_medium,
+    utm_campaign: o.utm.utm_campaign,
+    consent_at: o.now,
+    honeypot: ''
+  };
+}
+
+function shareLinks(pageUrl, code) {
+  const url = pageUrl.split('?')[0] + '?ref=' + code;
+  const text = 'I joined the OwoWorks pilot list - real virtual jobs for Nigerians, paid in data and cash for checked work. No joining fee, no stories. Join with my invite:';
+  return {
+    url,
+    whatsapp: 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url),
+    twitter: 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url),
+    facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)
+  };
+}
+
+async function postLead(cfg, payload) {
+  const res = await fetch(cfg.SUPABASE_URL + '/rest/v1/leads', {
+    method: 'POST',
+    headers: {
+      'apikey': cfg.SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + cfg.SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (res.status === 409) {
+    const err = new Error('This phone number is already on the pilot list.');
+    err.code = 'duplicate';
+    throw err;
+  }
+  if (!res.ok) {
+    const err = new Error('The list is not reachable right now. Your details were not sent - please try again.');
+    err.code = 'network';
+    try { err.detail = (await res.json()).message; } catch (e) { /* keep friendly */ }
+    throw err;
+  }
+  const rows = await res.json();
+  return rows[0];
+}
+
+async function rpcPosition(cfg, code) {
+  try {
+    const res = await fetch(cfg.SUPABASE_URL + '/rest/v1/rpc/lead_position', {
+      method: 'POST',
+      headers: {
+        'apikey': cfg.SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + cfg.SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ p_code: code })
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) { return null; }
+}
+
+async function rpcPreview(cfg, code) {
+  try {
+    const res = await fetch(cfg.SUPABASE_URL + '/rest/v1/rpc/preview_referral', {
+      method: 'POST',
+      headers: {
+        'apikey': cfg.SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + cfg.SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ p_code: code })
+    });
+    if (!res.ok) return { valid: false };
+    return await res.json();
+  } catch (e) { return { valid: false }; }
+}
+
+/* Invite landing: ?ref=CODE shows who invited you (masked) and attaches the
+   code to your signup. Without a backend the code is still attached locally
+   and honoured when the backend arrives - never silently dropped. */
+let pendingRef = getRefFromLocation(typeof location !== 'undefined' ? location.search : '');
+const inviteBanner = $('#inviteBanner');
+const inviteText = $('#inviteText');
+async function resolveInvite() {
+  if (!pendingRef || !inviteBanner) return;
+  if (!isReferralCodeFormat(pendingRef)) { pendingRef = null; return; }
+  const cfg = backendConfig();
+  if (!cfg) {
+    inviteText.textContent = 'You arrived with an invite code. It will be attached to your signup.';
+    inviteBanner.hidden = false;
+    return;
+  }
+  const p = await rpcPreview(cfg, pendingRef);
+  if (p && p.valid) {
+    inviteText.textContent = `You were invited by ${p.referrer} - their code will be attached to your signup.`;
+    inviteBanner.hidden = false;
+  } else {
+    pendingRef = null;
+  }
+}
+if (typeof document !== 'undefined') resolveInvite();
+
 function setError(input, message) {
   if (message) input.setAttribute('aria-invalid', 'true');
   else input.removeAttribute('aria-invalid');
@@ -156,7 +296,7 @@ function setError(input, message) {
 }
 
 if (form) {
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const name = $('#fName');
     const phone = $('#fPhone');
@@ -184,17 +324,90 @@ if (form) {
 
     status.textContent = '';
     status.className = 'form-status';
-    form.hidden = true;
-    successText.textContent =
-      `Checked ${LANES[lane].heading.toLowerCase()} details for ${name.value.trim()} on ${normalised}` +
-      (extra.value.trim() ? `, ${extra.value.trim()}` : '') +
-      (note.value.trim() ? `. Note: ${note.value.trim()}` : '.') +
-      ' Nothing was stored and nothing was transmitted.';
-    successBox.hidden = false;
-    successBox.setAttribute('tabindex', '-1');
-    successBox.focus();
+    const cfg = backendConfig();
+    const payload = buildLeadPayload({
+      lane,
+      name: name.value.trim(),
+      phone: normalised,
+      extra: extra.value.trim(),
+      note: note.value.trim(),
+      ref: pendingRef,
+      utm: getUtm(location.search),
+      now: new Date().toISOString()
+    });
+
+    if (!cfg) {
+      // Demo mode: no backend configured. The page already says this.
+      form.hidden = true;
+      successText.textContent =
+        `Checked ${LANES[lane].heading.toLowerCase()} details for ${payload.full_name} on ${normalised}` +
+        (payload.platform_extra ? `, ${payload.platform_extra}` : '') +
+        (payload.note ? `. Note: ${payload.note}` : '.') +
+        ' Nothing was stored and nothing was transmitted.';
+      successBox.hidden = false;
+      successBox.setAttribute('tabindex', '-1');
+      successBox.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    status.textContent = 'Sending…';
+    try {
+      const lead = await postLead(cfg, payload);
+      form.hidden = true;
+      $('#successTitle').textContent = 'You are on the list';
+      $('#demoNote').hidden = true;
+      successText.textContent =
+        `You are on the list, ${payload.full_name}. Your invite code is below - share it and move up the queue.`;
+      showReferral(lead.referral_code, cfg);
+      successBox.hidden = false;
+      successBox.setAttribute('tabindex', '-1');
+      successBox.focus();
+    } catch (err) {
+      status.textContent = err.message;
+      status.className = 'form-status error';
+      phone.focus();
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 }
+
+const refBox = $('#refBox');
+const refCode = $('#refCode');
+const refLink = $('#refLink');
+const refPosition = $('#refPosition');
+
+async function showReferral(code, cfg) {
+  if (!refBox) return;
+  const links = shareLinks(location.href, code);
+  refCode.textContent = code;
+  refLink.textContent = links.url;
+  refLink.href = links.url;
+  $('#shareWa').href = links.whatsapp;
+  $('#shareTw').href = links.twitter;
+  $('#shareFb').href = links.facebook;
+  refBox.hidden = false;
+  const pos = await rpcPosition(cfg, code);
+  if (pos && pos.valid) {
+    refPosition.textContent =
+      `You are number ${pos.position} in line` +
+      (pos.referred > 0 ? `, and ${pos.referred} ${pos.referred === 1 ? 'person has' : 'people have'} joined with your code.` : '. Share your code to move up.');
+  } else {
+    refPosition.textContent = 'Share your code below - every invite moves you up the queue.';
+  }
+}
+
+$('#copyRef')?.addEventListener('click', async e => {
+  const btn = e.currentTarget;
+  try {
+    await navigator.clipboard.writeText(refLink.textContent);
+    btn.textContent = 'Copied';
+  } catch (err) {
+    btn.textContent = 'Copy the link above';
+  }
+  setTimeout(() => { btn.textContent = 'Copy invite link'; }, 2500);
+});
 
 $('#againBtn')?.addEventListener('click', () => {
   successBox.hidden = true;
