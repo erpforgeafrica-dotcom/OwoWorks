@@ -1,0 +1,15 @@
+# Keep the build context tiny; only apps/web and server.mjs enter the image.
+.git
+.github
+node_modules
+db
+scripts
+PROOF
+tmp
+tmp-*
+*.md
+
+# Never ship a baked config or test files; config.js is served from env at runtime.
+apps/web/config.js
+apps/web/config.example.js
+apps/web/*.test.mjs

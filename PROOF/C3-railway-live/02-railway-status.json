@@ -1,0 +1,211 @@
+﻿{
+  "buckets": {
+    "edges": []
+  },
+  "deletedAt": null,
+  "environments": {
+    "edges": [
+      {
+        "node": {
+          "canAccess": true,
+          "deletedAt": null,
+          "id": "dae278f4-b54e-4f4b-8842-7214be9525e1",
+          "name": "production",
+          "serviceInstances": {
+            "edges": [
+              {
+                "node": {
+                  "activeDeployments": [
+                    {
+                      "createdAt": "2026-10-03T04:05:12.405Z",
+                      "deploymentStopped": false,
+                      "id": "9d2bde40-4c49-4239-9042-c33965a1b266",
+                      "instances": [
+                        {
+                          "id": "76c963f1-d46e-422f-ae56-c85946e7c404",
+                          "status": "RUNNING"
+                        }
+                      ],
+                      "meta": {
+                        "buildOnly": false,
+                        "cliAgentSessionId": "10336dbf-ae46-431b-9016-8c732a5079fc",
+                        "cliCaller": "skill:use-railway@1.6.1",
+                        "fileServiceManifest": {},
+                        "imageDigest": "sha256:5eeb406052f5fe85f1180985f4b4ef5ba34c4bb8435357719acbcee4ba0c7da2",
+                        "logsV2": true,
+                        "nixpacksProviders": [],
+                        "propertyFileMapping": {
+                          "build.builder": "$.build.builder",
+                          "build.dockerfilePath": "$.build.dockerfilePath",
+                          "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+                          "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+                          "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+                          "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+                        },
+                        "reason": "deploy",
+                        "rootDirectory": null,
+                        "runtime": "V2",
+                        "serviceManifest": {
+                          "build": {
+                            "buildCommand": null,
+                            "buildEnvironment": "V3",
+                            "builder": "DOCKERFILE",
+                            "dockerfilePath": "/Dockerfile",
+                            "nixpacksConfigPath": null,
+                            "nixpacksPlan": null,
+                            "watchPatterns": []
+                          },
+                          "deploy": {
+                            "cronSchedule": null,
+                            "drainingSeconds": null,
+                            "healthcheckPath": null,
+                            "healthcheckTimeout": null,
+                            "ipv6EgressEnabled": false,
+                            "limitOverride": null,
+                            "multiRegionConfig": {
+                              "sfo": {
+                                "numReplicas": 1
+                              }
+                            },
+                            "numReplicas": 1,
+                            "overlapSeconds": null,
+                            "preDeployCommand": null,
+                            "preDeployTimeoutSeconds": null,
+                            "region": null,
+                            "registryCredentials": null,
+                            "requiredMountPath": null,
+                            "restartPolicyMaxRetries": 10,
+                            "restartPolicyType": "ON_FAILURE",
+                            "runtime": "V2",
+                            "sleepApplication": false,
+                            "startCommand": null,
+                            "useLegacyStacker": false
+                          }
+                        },
+                        "volumeMounts": []
+                      },
+                      "status": "SUCCESS"
+                    }
+                  ],
+                  "cronSchedule": null,
+                  "domains": {
+                    "customDomains": [],
+                    "serviceDomains": [
+                      {
+                        "domain": "web-production-045b1.up.railway.app",
+                        "id": "4566af35-5a5d-42d8-9759-41cff0a52997",
+                        "targetPort": null
+                      }
+                    ]
+                  },
+                  "environmentId": "dae278f4-b54e-4f4b-8842-7214be9525e1",
+                  "id": "dd1d3ad6-c7d0-484f-be61-65ac364431fc",
+                  "latestDeployment": {
+                    "canRedeploy": true,
+                    "createdAt": "2026-10-03T04:05:12.405Z",
+                    "deploymentStopped": false,
+                    "id": "9d2bde40-4c49-4239-9042-c33965a1b266",
+                    "instances": [
+                      {
+                        "id": "76c963f1-d46e-422f-ae56-c85946e7c404",
+                        "status": "RUNNING"
+                      }
+                    ],
+                    "meta": {
+                      "buildOnly": false,
+                      "cliAgentSessionId": "10336dbf-ae46-431b-9016-8c732a5079fc",
+                      "cliCaller": "skill:use-railway@1.6.1",
+                      "fileServiceManifest": {},
+                      "imageDigest": "sha256:5eeb406052f5fe85f1180985f4b4ef5ba34c4bb8435357719acbcee4ba0c7da2",
+                      "logsV2": true,
+                      "nixpacksProviders": [],
+                      "propertyFileMapping": {
+                        "build.builder": "$.build.builder",
+                        "build.dockerfilePath": "$.build.dockerfilePath",
+                        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+                        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+                        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+                        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+                      },
+                      "reason": "deploy",
+                      "rootDirectory": null,
+                      "runtime": "V2",
+                      "serviceManifest": {
+                        "build": {
+                          "buildCommand": null,
+                          "buildEnvironment": "V3",
+                          "builder": "DOCKERFILE",
+                          "dockerfilePath": "/Dockerfile",
+                          "nixpacksConfigPath": null,
+                          "nixpacksPlan": null,
+                          "watchPatterns": []
+                        },
+                        "deploy": {
+                          "cronSchedule": null,
+                          "drainingSeconds": null,
+                          "healthcheckPath": null,
+                          "healthcheckTimeout": null,
+                          "ipv6EgressEnabled": false,
+                          "limitOverride": null,
+                          "multiRegionConfig": {
+                            "sfo": {
+                              "numReplicas": 1
+                            }
+                          },
+                          "numReplicas": 1,
+                          "overlapSeconds": null,
+                          "preDeployCommand": null,
+                          "preDeployTimeoutSeconds": null,
+                          "region": null,
+                          "registryCredentials": null,
+                          "requiredMountPath": null,
+                          "restartPolicyMaxRetries": 10,
+                          "restartPolicyType": "ON_FAILURE",
+                          "runtime": "V2",
+                          "sleepApplication": false,
+                          "startCommand": null,
+                          "useLegacyStacker": false
+                        }
+                      },
+                      "volumeMounts": []
+                    },
+                    "status": "SUCCESS"
+                  },
+                  "nextCronRunAt": null,
+                  "numReplicas": null,
+                  "serviceId": "75a3deec-7806-4b91-85d8-e72a4b60853a",
+                  "serviceName": "web",
+                  "source": {
+                    "image": null,
+                    "repo": null
+                  },
+                  "startCommand": null
+                }
+              }
+            ]
+          },
+          "unmergedChangesCount": null,
+          "volumeInstances": {
+            "edges": []
+          }
+        }
+      }
+    ]
+  },
+  "id": "60ac6fc7-c53d-4150-b419-5ca790e35a96",
+  "name": "owoworks",
+  "services": {
+    "edges": [
+      {
+        "node": {
+          "id": "75a3deec-7806-4b91-85d8-e72a4b60853a",
+          "name": "web"
+        }
+      }
+    ]
+  },
+  "workspace": {
+    "name": "m1ckad0's Projects"
+  },
+  "workspaceId": "bbd06585-25c6-4367-a3f3-6e9f9e828e9f"
+}

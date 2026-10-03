@@ -102,8 +102,19 @@ for (const f of html) {
   else if (labelled.length !== themeBtns.length) bad('theme toggle', `${themeBtns.length - labelled.length} toggle(s) missing aria-pressed or aria-label`);
   else ok(`${themeBtns.length} theme toggle(s) labelled with aria-pressed`);
 
-  if (!/localStorage\.getItem\(['"]owoworks-theme['"]\)/.test(c)) bad('theme boot', 'no-flash script does not read the stored theme before paint');
-  else if (!/data-theme/.test(c)) bad('theme boot', 'boot script does not set data-theme');
+  // The boot script may be inline or external, but it must run before the
+  // stylesheet (render-blocking, no defer/async) so the first paint is themed.
+  const beforeCss = c.split(/<link[^>]+rel=["']?stylesheet/i)[0];
+  const bootSources = [];
+  for (const m of beforeCss.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) bootSources.push(m[1]);
+  for (const m of beforeCss.matchAll(/<script[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)) {
+    if (/defer|async/i.test(m[0]) || /^(https?:)?\/\//i.test(m[1])) continue;
+    const p = join(WWW, m[1].replace(/^\//, ''));
+    if (existsSync(p)) bootSources.push(readFileSync(p, 'utf8'));
+  }
+  const boot = bootSources.join('\n');
+  if (!/localStorage\.getItem\(['"]owoworks-theme['"]\)/.test(boot)) bad('theme boot', 'no-flash script does not read the stored theme before paint');
+  else if (!/data-theme/.test(boot)) bad('theme boot', 'boot script does not set data-theme');
   else ok('no-flash theme boot present');
 
   const css = readFileSync(join(WWW, 'styles.css'), 'utf8');
