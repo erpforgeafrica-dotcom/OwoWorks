@@ -121,5 +121,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`owoworks web listening on http://${HOST}:${PORT} (supabase configured: ${CONFIGURED})`);
+  console.log(`promota web listening on http://${HOST}:${PORT} (supabase configured: ${CONFIGURED})`);
 });
