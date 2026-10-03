@@ -199,7 +199,7 @@ function buildLeadPayload(o) {
 
 function shareLinks(pageUrl, code) {
   const url = pageUrl.split('?')[0] + '?ref=' + code;
-  const text = 'I joined the OwoWorks pilot list - real virtual jobs for Nigerians, paid in data and cash for checked work. No joining fee, no stories. Join with my invite:';
+  const text = 'I joined the Promota pilot list - real virtual jobs for Nigerians, paid in data and cash for checked work. No joining fee, no stories. Join with my invite:';
   return {
     url,
     whatsapp: 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url),
