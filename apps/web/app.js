@@ -71,7 +71,7 @@ $$('#faqList .q').forEach(btn => {
     const open = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!open));
     panel.classList.toggle('open', !open);
-    btn.querySelector('span').textContent = open ? '+' : 'â€“';
+    btn.querySelector('span').textContent = open ? '+' : '–';
   });
 });
 
@@ -366,7 +366,7 @@ if (form) {
     }
 
     submitBtn.disabled = true;
-    status.textContent = 'Sendingâ€¦';
+    status.textContent = 'Sending…';
     try {
       const lead = await submitLead(cfg, payload);
       form.hidden = true;
