@@ -154,11 +154,11 @@ function normalisePhone(raw) {
    Live mode calls one Supabase PostgREST function, submit_lead (no SDK, no
    dependency). The publishable key is public by design; database grants and
    row-level security are the enforcement. The function is the only write
-   path - the public holds no direct table privilege. Without window.OWOWORKS
+   path - the public holds no direct table privilege. Without window.PROMOTA
    (see config.example.js) the form reports that it is not connected; it never
    pretends to have sent anything. */
 function backendConfig() {
-  const c = (typeof window !== 'undefined' && window.OWOWORKS) || null;
+  const c = (typeof window !== 'undefined' && window.PROMOTA) || null;
   if (c && c.SUPABASE_URL && c.SUPABASE_ANON_KEY) return c;
   return null;
 }

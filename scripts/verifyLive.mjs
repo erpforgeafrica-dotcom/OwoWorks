@@ -47,8 +47,8 @@ let cfg = null;
   const html = await res.text();
   check('home page returns 200 HTML', res.status === 200 && /text\/html/.test(res.headers.get('content-type') || ''),
     `status=${res.status}`);
-  check('page is the OwoWorks pilot', /OwoWorks/.test(html) && /theme-boot\.js/.test(html),
-    'missing OwoWorks markers');
+  check('page is the Promota pilot', /Promota/.test(html) && /theme-boot\.js/.test(html),
+    'missing Promota markers');
   check('no unbuilt config.example reference shipped', !html.includes('config.example.js'));
   check('content-security-policy present', /default-src 'self'/.test(res.headers.get('content-security-policy') || ''),
     res.headers.get('content-security-policy') || 'missing');
@@ -69,7 +69,7 @@ let cfg = null;
 {
   const res = await fetch(BASE + '/config.js');
   const text = await res.text();
-  const m = text.match(/window\.OWOWORKS\s*=\s*(\{[\s\S]*?\})\s*;/);
+  const m = text.match(/window\.PROMOTA\s*=\s*(\{[\s\S]*?\})\s*;/);
   if (m) { try { cfg = JSON.parse(m[1]); } catch { cfg = null; } }
   check('/config.js served as javascript', res.status === 200 && /javascript/.test(res.headers.get('content-type') || ''),
     `status=${res.status}`);

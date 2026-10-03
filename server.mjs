@@ -2,7 +2,7 @@
 /**
  * Promota production web server.
  *
- * Serves the static site in apps/web and injects window.OWOWORKS at runtime
+ * Serves the static site in apps/web and injects window.PROMOTA at runtime
  * from environment variables (SUPABASE_URL, SUPABASE_ANON_KEY). Nothing is
  * baked into the image, so the same build works in every environment and no
  * backend key is ever committed. The key it serves is the publishable key,
@@ -67,7 +67,7 @@ const SECURITY_HEADERS = {
 function runtimeConfigBody() {
   const cfg = { SUPABASE_URL, SUPABASE_ANON_KEY };
   return '/* Injected at runtime by server.mjs. Publishable key only. */\n'
-    + 'window.OWOWORKS = ' + JSON.stringify(cfg) + ';\n';
+    + 'window.PROMOTA = ' + JSON.stringify(cfg) + ';\n';
 }
 
 function send(res, status, headers, body, headOnly) {
