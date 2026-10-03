@@ -59,7 +59,8 @@ Proof bundles: `PROOF/C1-lead-backend-live/` and `PROOF/C2-live-api-proof/`
 ## Blockers (owner actions)
 
 1. Trademark + CAC + domain clearance for "OwoWorks" (web prior-art done; legal clearance NOT done).
-2. `gh auth login` → create `erpforgeafrica-dotcom/owoworks` remote → push.
+2. ~~`gh auth login` → create `erpforgeafrica-dotcom/owoworks` remote → push.~~ **DONE** — remote
+   `erpforgeafrica-dotcom/OwoWorks`, `main` pushed and verified on GitHub (HEAD `f9ecdd2`).
 3. Railway target account confirmed in-conversation (`railway whoami` before any state change).
 4. Registered entity name/jurisdiction + PII-storage decision.
 5. Termii API key for the SMS double opt-in worker.
