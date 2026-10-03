@@ -23,6 +23,7 @@ const code = [
   grab('isReferralCodeFormat'),
   grab('getUtm'),
   grab('buildLeadPayload'),
+  grab('buildSubmitArgs'),
   grab('shareLinks')
 ].join('\n');
 
@@ -30,7 +31,7 @@ const fns = new Function(`
   const window = {};
   const location = { search: '' };
   ${code}
-  return { getRefFromLocation, isReferralCodeFormat, getUtm, buildLeadPayload, shareLinks };
+  return { getRefFromLocation, isReferralCodeFormat, getUtm, buildLeadPayload, buildSubmitArgs, shareLinks };
 `)();
 
 let pass = 0, fail = 0;
@@ -39,7 +40,7 @@ const t = (label, cond, detail) => {
   else { fail++; console.log(`  FAIL  ${label}${detail ? `\n          -> ${detail}` : ''}`); }
 };
 
-const { getRefFromLocation, isReferralCodeFormat, getUtm, buildLeadPayload, shareLinks } = fns;
+const { getRefFromLocation, isReferralCodeFormat, getUtm, buildLeadPayload, buildSubmitArgs, shareLinks } = fns;
 
 // ref parsing
 t('ref extracted and uppercased', getRefFromLocation('?ref=ab12cd34') === 'AB12CD34');
@@ -75,13 +76,33 @@ t('lowercase rejected (codes are uppercase)', !isReferralCodeFormat('ab12cd34'))
     utm: { utm_source: 'whatsapp', utm_medium: null, utm_campaign: null },
     now: '2026-10-02T12:00:00.000Z'
   });
-  t('payload carries lane/name/phone', p.lane === 'promoter' && p.full_name === 'Adaeze Okafor' && p.phone_e164 === '08030000000');
+  t('payload carries lane/name/phone', p.lane === 'promoter' && p.full_name === 'Adaeze Okafor' && p.phone === '08030000000');
   t('payload carries ref + utm + fresh consent',
     p.referred_by_code === 'AB12CD34' && p.utm_source === 'whatsapp' && p.consent_at === '2026-10-02T12:00:00.000Z',
     JSON.stringify(p));
   t('payload honeypot is empty (bots fill it, users never do)', p.honeypot === '');
   t('payload has no secrets, keys or PII beyond the lead itself',
     !('apikey' in p) && !('Authorization' in p) && !('password' in p));
+}
+
+// submit_lead argument mapping (the single public write path)
+{
+  const payload = buildLeadPayload({
+    lane: 'owner', name: 'Chidi', phone: '08030000000', extra: 'Shop', note: null,
+    ref: 'AB12CD34', utm: { utm_source: 'x', utm_medium: null, utm_campaign: null },
+    now: '2026-10-02T12:00:00.000Z'
+  });
+  const a = buildSubmitArgs(payload);
+  const keys = Object.keys(a).sort().join(',');
+  t('submit args use the exact p_* names the function declares',
+    keys === 'p_consent_at,p_full_name,p_honeypot,p_lane,p_note,p_phone,p_platform_extra,p_referred_by_code,p_utm_campaign,p_utm_medium,p_utm_source',
+    keys);
+  t('submit args carry the values through unchanged',
+    a.p_lane === 'owner' && a.p_full_name === 'Chidi' && a.p_phone === '08030000000' &&
+    a.p_referred_by_code === 'AB12CD34' && a.p_consent_at === '2026-10-02T12:00:00.000Z',
+    JSON.stringify(a));
+  t('submit args keep the honeypot empty for a human', a.p_honeypot === '');
+  t('submit args expose no key material', !JSON.stringify(a).includes('sb_'));
 }
 
 // share links
@@ -93,7 +114,7 @@ t('lowercase rejected (codes are uppercase)', !isReferralCodeFormat('ab12cd34'))
   t('twitter intent encoded', s.twitter.includes('twitter.com/intent/tweet') && s.twitter.includes('AB12CD34'));
   t('facebook intent encoded', s.facebook.includes('facebook.com/sharer') && s.facebook.includes(encodeURIComponent('https://owoworks.example/?ref=AB12CD34')));
   t('share copy makes no income promise',
-    !/earn ₦|guaranteed|instant|passive/i.test(decodeURIComponent(s.whatsapp)));
+    !/earn â‚¦|guaranteed|instant|passive/i.test(decodeURIComponent(s.whatsapp)));
 }
 
 console.log(`\n  PASS ${pass}   FAIL ${fail}`);

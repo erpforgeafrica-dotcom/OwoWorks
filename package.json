@@ -8,10 +8,15 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node apps/web/phone.test.mjs && node apps/web/lead.test.mjs",
+    "test": "node apps/web/phone.test.mjs && node apps/web/lead.test.mjs && node db/ledger.test.mjs && node db/leads.test.mjs",
     "site": "node scripts/checkSite.mjs",
     "serve": "node scripts/serve.mjs",
-    "db:sql": "node scripts/validateSql.mjs"
+    "db:up": "node scripts/migrateUp.mjs",
+    "db:test": "node db/ledger.test.mjs && node db/leads.test.mjs",
+    "db:remote": "node scripts/migrateRemote.mjs",
+    "db:probe": "node scripts/dbProbe.mjs",
+    "db:link": "node scripts/linkSupabase.mjs",
+    "db:live": "node db/live.proof.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.17",

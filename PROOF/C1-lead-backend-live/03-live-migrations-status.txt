@@ -1,0 +1,12 @@
+﻿Connected to https://ykyvmgdruterzrmltquz.supabase.co
+
+Pending plan (5 production migration(s)):
+
+  APPLIED   0001_core.sql  (1364ms on 2026-10-03T00:34:56Z)
+  APPLIED   0002_leads.sql  (712ms on 2026-10-03T00:34:58Z)
+  APPLIED   0003_access_control.sql  (1624ms on 2026-10-03T00:35:00Z)
+  PENDING   0004_submit_lead.sql
+  PENDING   0005_fix_phone_normaliser.sql
+
+--status only. Nothing was changed.
+

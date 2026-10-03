@@ -71,7 +71,7 @@ $$('#faqList .q').forEach(btn => {
     const open = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!open));
     panel.classList.toggle('open', !open);
-    btn.querySelector('span').textContent = open ? '+' : '–';
+    btn.querySelector('span').textContent = open ? '+' : 'â€“';
   });
 });
 
@@ -151,10 +151,12 @@ function normalisePhone(raw) {
    code let the last error overwrite the first while focus went to the first -
    announcing the wrong error to screen readers. */
 /* ---------- lead capture backend ----------
-   Live mode posts straight to Supabase PostgREST (no SDK, no dependency):
-   the anon key is public by design and RLS enforces append-only. Without
-   window.OWOWORKS (see config.example.js) the form stays in demo mode and
-   the page keeps saying so. */
+   Live mode calls one Supabase PostgREST function, submit_lead (no SDK, no
+   dependency). The publishable key is public by design; database grants and
+   row-level security are the enforcement. The function is the only write
+   path - the public holds no direct table privilege. Without window.OWOWORKS
+   (see config.example.js) the form reports that it is not connected; it never
+   pretends to have sent anything. */
 function backendConfig() {
   const c = (typeof window !== 'undefined' && window.OWOWORKS) || null;
   if (c && c.SUPABASE_URL && c.SUPABASE_ANON_KEY) return c;
@@ -183,7 +185,7 @@ function buildLeadPayload(o) {
   return {
     lane: o.lane,
     full_name: o.name,
-    phone_e164: o.phone,
+    phone: o.phone,
     platform_extra: o.extra || null,
     note: o.note || null,
     referred_by_code: o.ref || null,
@@ -206,30 +208,49 @@ function shareLinks(pageUrl, code) {
   };
 }
 
-async function postLead(cfg, payload) {
-  const res = await fetch(cfg.SUPABASE_URL + '/rest/v1/leads', {
+/* Map the form payload onto the named arguments of submit_lead. Kept as a
+   pure function so apps/web/lead.test.mjs can assert the contract exactly. */
+function buildSubmitArgs(payload) {
+  return {
+    p_lane: payload.lane,
+    p_full_name: payload.full_name,
+    p_phone: payload.phone,
+    p_platform_extra: payload.platform_extra,
+    p_note: payload.note,
+    p_referred_by_code: payload.referred_by_code,
+    p_utm_source: payload.utm_source,
+    p_utm_medium: payload.utm_medium,
+    p_utm_campaign: payload.utm_campaign,
+    p_consent_at: payload.consent_at,
+    p_honeypot: payload.honeypot
+  };
+}
+
+async function submitLead(cfg, payload) {
+  const res = await fetch(cfg.SUPABASE_URL + '/rest/v1/rpc/submit_lead', {
     method: 'POST',
     headers: {
       'apikey': cfg.SUPABASE_ANON_KEY,
       'Authorization': 'Bearer ' + cfg.SUPABASE_ANON_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(buildSubmitArgs(payload))
   });
-  if (res.status === 409) {
-    const err = new Error('This phone number is already on the pilot list.');
-    err.code = 'duplicate';
-    throw err;
-  }
   if (!res.ok) {
     const err = new Error('The list is not reachable right now. Your details were not sent - please try again.');
     err.code = 'network';
-    try { err.detail = (await res.json()).message; } catch (e) { /* keep friendly */ }
     throw err;
   }
-  const rows = await res.json();
-  return rows[0];
+  // submit_lead answers with a plain object: { ok, referral_code, position,
+  // referred }, or { ok:false, message } when it refuses. It never returns
+  // personal data.
+  const out = await res.json();
+  if (!out || out.ok !== true) {
+    const err = new Error(out && out.message ? out.message : 'That sign-up could not be completed.');
+    err.code = 'refused';
+    throw err;
+  }
+  return out;
 }
 
 async function rpcPosition(cfg, code) {
@@ -337,29 +358,22 @@ if (form) {
     });
 
     if (!cfg) {
-      // Demo mode: no backend configured. The page already says this.
-      form.hidden = true;
-      successText.textContent =
-        `Checked ${LANES[lane].heading.toLowerCase()} details for ${payload.full_name} on ${normalised}` +
-        (payload.platform_extra ? `, ${payload.platform_extra}` : '') +
-        (payload.note ? `. Note: ${payload.note}` : '.') +
-        ' Nothing was stored and nothing was transmitted.';
-      successBox.hidden = false;
-      successBox.setAttribute('tabindex', '-1');
-      successBox.focus();
+      // Not connected: say so plainly. Never show a success screen for a
+      // sign-up that was not sent.
+      status.textContent = 'This form is not connected yet. Please try again later.';
+      status.className = 'form-status error';
       return;
     }
 
     submitBtn.disabled = true;
-    status.textContent = 'Sending…';
+    status.textContent = 'Sendingâ€¦';
     try {
-      const lead = await postLead(cfg, payload);
+      const lead = await submitLead(cfg, payload);
       form.hidden = true;
       $('#successTitle').textContent = 'You are on the list';
-      $('#demoNote').hidden = true;
       successText.textContent =
         `You are on the list, ${payload.full_name}. Your invite code is below - share it and move up the queue.`;
-      showReferral(lead.referral_code, cfg);
+      showReferral(lead.referral_code, cfg, lead);
       successBox.hidden = false;
       successBox.setAttribute('tabindex', '-1');
       successBox.focus();
@@ -378,7 +392,7 @@ const refCode = $('#refCode');
 const refLink = $('#refLink');
 const refPosition = $('#refPosition');
 
-async function showReferral(code, cfg) {
+async function showReferral(code, cfg, result) {
   if (!refBox) return;
   const links = shareLinks(location.href, code);
   refCode.textContent = code;
@@ -388,7 +402,11 @@ async function showReferral(code, cfg) {
   $('#shareTw').href = links.twitter;
   $('#shareFb').href = links.facebook;
   refBox.hidden = false;
-  const pos = await rpcPosition(cfg, code);
+  // submit_lead already returned the queue numbers; only fall back to a
+  // separate lookup when they were not supplied.
+  const pos = (result && typeof result.position === 'number')
+    ? { valid: true, position: result.position, referred: result.referred }
+    : await rpcPosition(cfg, code);
   if (pos && pos.valid) {
     refPosition.textContent =
       `You are number ${pos.position} in line` +

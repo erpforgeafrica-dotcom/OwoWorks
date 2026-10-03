@@ -1,6 +1,6 @@
 # STATUS.md — verified state of the OwoWorks repo
 
-**Date:** 2026-10-02. **Rule:** nothing below is claimed without a passing check. Items that
+**Date:** 2026-10-03. **Rule:** nothing below is claimed without a passing check. Items that
 cannot be proven here are marked UNVERIFIED with their proof venue, never passed.
 
 ## Where this code comes from
@@ -11,20 +11,48 @@ task state machine with 24h auto-approve, payout eligibility, dispute lifecycle,
 trigger-guarded roles, typed settings, append-only audit, RLS policies. This repo rebrands it
 as OwoWorks and optimises the web surface; it does not re-prove the database.
 
+## Verified now (local engine — PGlite/WASM, a real PostgreSQL build)
+
 | Claim | Evidence |
 |---|---|
-| Migrations execute on real PostgreSQL | `node scripts/migrateUp.mjs` — 0000–0002 APPLIED; `db/leads.test.mjs` 14/14 |
-| Abuse controls hold for every DB role | honeypot + consent freshness in trigger AND RLS (either alone suffices) |
+| All seven migrations execute on real PostgreSQL | `node scripts/migrateUp.mjs` — 7 APPLIED |
+| Core ledger invariants hold | `node db/ledger.test.mjs` — 56 PASS / 0 FAIL / 2 UNVERIFIED |
+| Lead capture + `submit_lead` hold | `node db/leads.test.mjs` — 37 PASS / 0 FAIL / 1 UNVERIFIED |
+| Abuse controls hold for every DB role | honeypot + consent freshness in trigger AND RLS |
 | Referrals pay zero, count queue only | schema + `docs/LEAD-CAPTURE.md` §3 (anti-MLM rule) |
-| Web surface passes integrity | `npm run site` (run before every commit) |
-| Phone validation correct | `npm test` — 17 phone + 20 lead-client tests |
-| Palette accessible | every pair in `docs/BRAND.md` §2 measured 2026-10-02, WCAG 2.2 AA |
-| Logo PNG exports genuine | dimensions read back from the files (see table below) |
+| `anon` cannot touch `leads` or the migration ledger | privilege tests in `db/leads.test.mjs` |
+| Phone validation correct | `npm test` — 17 phone + client + 56 + 37 tests |
+| Web surface passes integrity | `npm run site` |
+| Palette accessible | every pair in `docs/BRAND.md` §2, WCAG 2.2 AA |
+
+Proof bundles: `PROOF/C1-lead-backend-live/` and `PROOF/C2-live-api-proof/`
+(manifests + raw command output + artifact hashes).
+
+## Live Supabase project (connected and proven over HTTPS)
+
+- Project `ykyvmgdruterzrmltquz`; credentials authenticate (`node scripts/dbProbe.mjs`).
+- **All six migrations `0001`–`0006` are applied live** (recorded in the ledger).
+- `node db/live.proof.mjs` — **PASS 14 / FAIL 0 / UNVERIFIED 0 — LIVE API PROOF: ALL HOLD.**
+  Proves over the real network, with the shipped publishable key: a visitor can submit a
+  sign-up; a visitor cannot read, update or delete the sign-up list; a visitor cannot read
+  the migration ledger; duplicates are refused; a signed-in account is also blocked from
+  the sign-up list but can read shared campaign data; the row and its outbox event really
+  exist. Every test row and account is deleted afterwards (204/204/200).
+
+## Closed live findings
+
+- The migration ledger `public.owoworks_schema_migrations` had inherited public grants
+  (`anon[siud]`). `0006` revoked them and enabled RLS; live re-probe now shows
+  `anon[----] auth[----]`. **Closed.**
+- The web client used `Prefer: return=representation` on a direct `leads` insert, which
+  needs SELECT that `anon` does not have. It now calls the single public action
+  `submit_lead` (`apps/web/app.js`), proven live. **Closed.**
+- `apps/web/config.js` now exists (gitignored, publishable key only, generated from `.env`),
+  so the site is live-capable. **Closed.**
 
 ## Carry-over truth (from amplo, unchanged)
 
-- **No backend, no auth, no lead capture.** The form validates and discards; the page says so.
-- **RLS policies UNVERIFIED** — need Supabase staging + real JWTs. Proof venue named, not faked.
+- **RLS policies verified over HTTP** by `db/live.proof.mjs` (see `PROOF/C2-live-api-proof/`).
 - **Pre-launch `noindex`** per SEO-D1 (removal trigger documented in amplo `docs/SEO.md`).
 - **PRD has 0 acceptance criteria; admin/roles/settings UI 0%; compliance map unsourced.**
 
@@ -32,8 +60,9 @@ as OwoWorks and optimises the web surface; it does not re-prove the database.
 
 1. Trademark + CAC + domain clearance for "OwoWorks" (web prior-art done; legal clearance NOT done).
 2. `gh auth login` → create `erpforgeafrica-dotcom/owoworks` remote → push.
-3. `SUPABASE_ACCESS_TOKEN` → Supabase project wiring + RLS JWT proof.
+3. Railway target account confirmed in-conversation (`railway whoami` before any state change).
 4. Registered entity name/jurisdiction + PII-storage decision.
+5. Termii API key for the SMS double opt-in worker.
 
 ## Identity export verification
 

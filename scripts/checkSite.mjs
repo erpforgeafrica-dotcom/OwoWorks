@@ -55,8 +55,9 @@ for (const f of html) {
 
   const assets = [...c.matchAll(/(?:href|src)="([^"#][^"]*)"/g)].map(m => m[1])
     .filter(u => !/^(https?:|mailto:|tel:)/.test(u));
-  // config.js is intentionally optional: it carries the live backend keys and
-  // is created at deploy time, never committed. Its absence means demo mode.
+  // config.js is intentionally optional: it carries the live publishable key
+  // and is created at deploy time, never committed. Without it the form says
+  // it is not connected; it never fakes a successful sign-up.
   const required = assets.filter(u => u !== 'config.js');
   const missing = [...new Set(required.filter(u => !existsSync(join(WWW, u))))];
   if (missing.length) bad('local assets', `missing: ${missing.join(', ')}`);

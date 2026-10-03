@@ -14,9 +14,10 @@ import { readdirSync, readFileSync, rmSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PGlite } from '@electric-sql/pglite';
+import { orderedMigrations, MIGRATIONS_DIR } from './migrations.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DIR = join(ROOT, 'db', 'migrations');
+const DIR = MIGRATIONS_DIR;
 const DATA = join(ROOT, '.cache', 'pglite');
 
 export async function withDb(fn) {
@@ -32,18 +33,29 @@ export async function withDb(fn) {
 }
 
 export async function migrate(db, { quiet = false } = {}) {
-  const files = readdirSync(DIR).filter(f => f.endsWith('.sql')).sort();
+  // The hosted runner keeps a ledger of applied files. Recreate the same table
+  // here so migrations that harden it (0006_secure_migration_ledger.sql) run
+  // against a real object locally instead of being skipped as "table missing".
+  await db.exec(`
+    create table if not exists public.owoworks_schema_migrations (
+      filename   text primary key,
+      checksum   text        not null,
+      applied_at timestamptz not null default now(),
+      duration_ms integer    not null
+    );`);
+
+  // includeLocal: the auth stub is applied ONLY here, never on a hosted project.
+  const steps = orderedMigrations({ includeLocal: true });
   const applied = [];
-  for (const f of files) {
-    const sql = readFileSync(join(DIR, f), 'utf8');
+  for (const { file, sql } of steps) {
     const t0 = Date.now();
     try {
       await db.exec(sql);
-      applied.push(f);
-      if (!quiet) console.log(`  APPLIED  ${f}  (${Date.now() - t0}ms)`);
+      applied.push(file);
+      if (!quiet) console.log(`  APPLIED  ${file}  (${Date.now() - t0}ms)`);
     } catch (e) {
-      if (!quiet) console.log(`  FAILED   ${f}\n           -> ${String(e.message).split('\n')[0]}`);
-      throw new Error(`${f}: ${String(e.message).split('\n')[0]}`);
+      if (!quiet) console.log(`  FAILED   ${file}\n           -> ${String(e.message).split('\n')[0]}`);
+      throw new Error(`${file}: ${String(e.message).split('\n')[0]}`);
     }
   }
   return applied;

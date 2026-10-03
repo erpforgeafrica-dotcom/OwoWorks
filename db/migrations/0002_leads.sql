@@ -1,5 +1,5 @@
 -- =====================================================================
--- 0002_leads.sql — pilot lead capture with referral growth engine.
+-- 0002_leads.sql â€” pilot lead capture with referral growth engine.
 --
 -- Mechanics adopted from best-rated open source (see docs/LEAD-CAPTURE.md):
 --   - Dub (dubinc/dub, 24K stars): referral attribution with reversal on
@@ -19,7 +19,10 @@ create table leads (
   id              uuid primary key default gen_random_uuid(),
   lane            text not null check (lane in ('promoter','business','partner')),
   full_name       text not null check (char_length(full_name) between 2 and 120),
-  phone_e164      text not null unique check (phone_e164 ~ '^0\d{10}$'),
+  -- The visitor's phone number, stored in the ordinary Nigerian way
+  -- (0803 000 0000 -> 08030000000). Named "phone", not "e164", because it is
+  -- not stored in international format.
+  phone           text not null unique check (phone ~ '^0\d{10}$'),
   network         text check (network in ('MTN','GLO','AIRTEL','9MOBILE')),
   platform_extra  text,
   note            text,
@@ -45,9 +48,10 @@ create table leads (
 
 create index leads_referred_by_idx on leads(referred_by_code) where referred_by_code is not null;
 create index leads_status_idx on leads(status, created_at desc);
-create index leads_phone_idx on leads(phone_e164);
+create index leads_phone_idx on leads(phone);
 
--- Referral codes: 8 chars, no ambiguous glyphs (no 0/O, 1/I/L).
+-- Referral codes: 8 characters, with no look-alike glyphs (no 0/O, no 1/I/L),
+-- so a code can be read aloud or copied from a screenshot without mistakes.
 -- Assigned by the database, never trusted from the client.
 create or replace function assign_referral_code() returns trigger
 language plpgsql as $$
@@ -56,12 +60,21 @@ declare
   v_code  text;
   v_tries integer := 0;
   v_i     integer;
+  v_hex   text;
+  v_n     integer;
 begin
   if new.referral_code is null or new.referral_code = '' then
     loop
+      -- Unpredictable: derived from a cryptographically random UUID rather
+      -- than the guessable random(). A 32-character hex string gives us
+      -- plenty of fresh values, and collisions are re-rolled below.
+      v_hex := replace(gen_random_uuid()::text, '-', '');
       v_code := '';
       for v_i in 1..8 loop
-        v_code := v_code || substr(v_chars, (floor(random() * 32)::integer) + 1, 1);
+        v_n   := ('x' || substr(v_hex, v_i, 1))::bit(4)::integer;
+        -- (v_n * 31) / 16 is always between 0 and 29, so the character
+        -- index is never out of range and the code is always 8 characters.
+        v_code := v_code || substr(v_chars, (v_n * length(v_chars)) / 16 + 1, 1);
       end loop;
       exit when not exists (select 1 from leads where referral_code = v_code);
       v_tries := v_tries + 1;
@@ -94,7 +107,7 @@ language plpgsql as $$
 begin
   insert into outbox(topic, payload)
   values ('lead.captured', jsonb_build_object(
-    'lead_id', new.id, 'lane', new.lane, 'phone_e164', new.phone_e164));
+    'lead_id', new.id, 'lane', new.lane, 'phone', new.phone));
   return new;
 end;
 $$;
@@ -141,7 +154,7 @@ create policy leads_anon_insert on leads
     consent_at is not null
     and consent_at <= now()
     and consent_at > now() - interval '30 minutes'
-    and phone_e164 ~ '^0\d{10}$'
+    and phone ~ '^0\d{10}$'
     and (honeypot is null or honeypot = '')
   );
 

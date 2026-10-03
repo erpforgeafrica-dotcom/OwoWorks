@@ -1,0 +1,27 @@
+﻿captured_utc=2026-10-03T03:00:04Z
+HEAD=df1a48b824fa49b2f56b62cc333273f4eb0e3a08
+branch=main
+
+ M STATUS.md
+ M apps/web/app.js
+ M apps/web/config.example.js
+ M apps/web/index.html
+ M apps/web/lead.test.mjs
+ M db/leads.test.mjs
+ M db/migrations/0002_leads.sql
+R  db/migrations/0000_auth_stub.sql -> db/migrations/local/0000_auth_stub.sql
+ M docs/LEAD-CAPTURE.md
+ M package.json
+ M scripts/checkSite.mjs
+ M scripts/migrateUp.mjs
+?? PROOF/
+?? db/ledger.test.mjs
+?? db/live.proof.mjs
+?? db/migrations/0003_access_control.sql
+?? db/migrations/0004_submit_lead.sql
+?? db/migrations/0005_fix_phone_normaliser.sql
+?? db/migrations/0006_secure_migration_ledger.sql
+?? scripts/dbProbe.mjs
+?? scripts/linkSupabase.mjs
+?? scripts/migrateRemote.mjs
+?? scripts/migrations.mjs

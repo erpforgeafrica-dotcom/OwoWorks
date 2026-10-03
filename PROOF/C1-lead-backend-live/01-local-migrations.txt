@@ -1,0 +1,12 @@
+﻿migrateUp ΓÇö running against a real PostgreSQL engine (PGlite/WASM)
+
+  APPLIED  local/0000_auth_stub.sql  (49ms)
+  APPLIED  0001_core.sql  (553ms)
+  APPLIED  0002_leads.sql  (92ms)
+  APPLIED  0003_access_control.sql  (52ms)
+  APPLIED  0004_submit_lead.sql  (11ms)
+  APPLIED  0005_fix_phone_normaliser.sql  (5ms)
+  APPLIED  0006_secure_migration_ledger.sql  (14ms)
+
+  7 migration(s) applied. Database at .cache/pglite
+

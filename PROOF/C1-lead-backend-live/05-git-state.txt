@@ -1,0 +1,29 @@
+﻿### git status --short
+ M apps/web/app.js
+ M apps/web/lead.test.mjs
+ M db/leads.test.mjs
+ M db/migrations/0002_leads.sql
+R  db/migrations/0000_auth_stub.sql -> db/migrations/local/0000_auth_stub.sql
+ M docs/LEAD-CAPTURE.md
+ M package.json
+ M scripts/migrateUp.mjs
+?? PROOF/
+?? db/ledger.test.mjs
+?? db/migrations/0003_access_control.sql
+?? db/migrations/0004_submit_lead.sql
+?? db/migrations/0005_fix_phone_normaliser.sql
+?? scripts/connDiag.mjs
+?? scripts/dbProbe.mjs
+?? scripts/lineMap.mjs
+?? scripts/linkSupabase.mjs
+?? scripts/migrateRemote.mjs
+?? scripts/migrations.mjs
+?? scripts/pwCheck.mjs
+
+### git log --oneline -5
+df1a48b feat(leads): capture backend with referral growth engine, Dub/Formbricks mechanics adopted
+6899904 feat: OwoWorks pilot brand repo - verified rebrand of the audited system
+
+### branch
+main
+

@@ -1,0 +1,110 @@
+﻿### ledger.test.mjs (56 core invariants)
+  PASS  balanced two-posting entry commits
+  PASS  UNBALANCED entry is refused at COMMIT (one-sided)
+  PASS  UNBALANCED entry is refused (mismatched amounts)
+  PASS  entry with a SINGLE posting is refused by the balance rule
+  PASS  zero-amount posting is refused
+  PASS  negative amount is refused (a negative debit IS a credit)
+  PASS  mixed-currency entry is refused
+  PASS  UPDATE on a posting is refused
+  PASS  DELETE on a posting is refused
+  PASS  audit row can be written (append path)
+  PASS  UPDATE on audit_log is refused
+  PASS  DELETE on audit_log is refused
+  PASS  duplicate ledger idempotency_key is refused
+  PASS  duplicate payout idempotency_key is refused
+  PASS  campaign created with a sane split
+  PASS  split that breaches the margin floor is refused
+  PASS  share + reserve exceeding 100% is refused
+  PASS  hold period outside 48-72h is refused
+  PASS  negative budget is refused
+  PASS  unfunded campaign cannot go LIVE
+  PASS  escrow funding writes a balanced entry to the campaign account
+  PASS  partial escrow is recorded but does not unlock launch
+  PASS  half-funded campaign cannot go LIVE
+  PASS  fully funded campaign goes LIVE
+  PASS  live campaign auto-pauses at 90% of budget
+  PASS  auto-pause actually moved the campaign to paused
+  PASS  spend above escrow is refused even when paused
+  PASS  task created in draft
+  PASS  draft -> assigned is legal
+  PASS  assigned -> paid (skipping review) is refused
+  PASS  second task created for transition coverage
+  PASS  draft -> approved is refused
+  PASS  assigned -> submitted -> checking -> approved is legal
+  PASS  approved -> submitted (regression) is refused
+  PASS  stale submitted task is auto-approved past its deadline
+  PASS  auto-approve actually moved the task to approved
+  PASS  auto-approve emits an outbox event
+  PASS  verified promoter can take a data reward
+  PASS  verified promoter can take a cash payout
+  PASS  unverified promoter cannot take cash (KYC tier 2 required)
+  PASS  unverified promoter cannot take data (verified phone required)
+  PASS  direct UPDATE of a role is refused (must use assign_role)
+  PASS  assign_role without the grant is refused
+  PASS  suspended state without a timestamp is refused
+  PASS  justified suspension (state + timestamp + reason) is recorded
+  PASS  promoter can raise a dispute on their task
+  PASS  open -> upheld (skipping review) is refused
+  PASS  open -> under_review -> upheld with a named reviewer is legal
+  PASS  second dispute opened for reviewer coverage
+  PASS  a decision without a named reviewer is refused
+  PASS  negative money setting is refused
+  PASS  basis-points setting above 10000 is refused
+  PASS  global sweep: no unbalanced entry survives
+  PASS  global sweep: every entry carries postings (single postings are refused by balance)
+  PASS  outbox rows are claimable with SKIP LOCKED
+  PASS  a reversal entry is the sanctioned way to correct
+  UNVERIFIED  assign_role success path with a real grant
+          -> needs an authenticated session with role.assign; PGlite has no JWTs. Prove on Supabase staging.
+  UNVERIFIED  settings write-gating (settings.write permission)
+          -> RLS is bypassed by the PGlite superuser by design. Prove with anon/authenticated JWTs on Supabase staging.
+
+  PASS 56   FAIL 0   UNVERIFIED 2
+  LEDGER INVARIANTS: ALL HOLD
+  NOTE: UNVERIFIED items are not passes. Each names its proof venue (Supabase staging).
+
+### leads.test.mjs (lead capture + submit_lead + ledger hardening)
+  PASS  lead captured, code auto-assigned in legal alphabet
+  PASS  referral code is 8 chars from the unambiguous alphabet
+  PASS  duplicate phone is refused (one identity per lead)
+  PASS  malformed phone is refused
+  PASS  honeypot-filled submission is refused
+  PASS  stale consent (older than 30 minutes) is refused
+  PASS  future consent is refused
+  PASS  client-supplied code in illegal shape is refused
+  PASS  referred lead resolves against a real code
+  PASS  unknown referral code is refused
+  PASS  preview_referral masks the referrer (no phone, no full surname)
+  PASS  preview_referral says false for unknown codes
+  PASS  lead_position reports queue number and referral count, no PII
+  PASS  every captured lead emits an outbox event for the SMS worker
+  PASS  40 generated codes are ALL exactly 8 characters (regression)
+  PASS  40 generated codes use only the look-alike-free alphabet (regression)
+  PASS  generated codes are not all identical (randomness is real)
+  PASS  phone column exists under an honest name
+  PASS  healthcheck reports ok and leaks nothing
+  PASS  the four operational database functions all exist
+  PASS  anon CANNOT run the data-deletion function
+  PASS  anon CANNOT assign roles
+  PASS  anon cannot touch the leads table at all (submit_lead RPC only)
+  PASS  anon cannot read the money ledger
+  PASS  anon cannot touch the migration ledger (regression: 0006)
+  PASS  migration ledger has row level security turned on (regression: 0006)
+  PASS  anon MAY call submit_lead (the single public write path)
+  PASS  submit_lead returns ok plus a queue position and invite code
+  PASS  submit_lead response contains NO personal data
+  PASS  submit_lead actually stored the row, normalised from spaced input
+  PASS  submit_lead refuses a duplicate number with the same answer every time
+  PASS  submit_lead refuses a filled honeypot
+  PASS  a refused honeypot submission stores nothing
+  PASS  submit_lead refuses consent given hours ago
+  PASS  submit_lead refuses consent dated in the future
+  PASS  submit_lead refuses an unreadable phone number
+  PASS  phone helper accepts every valid spelling and rejects the rest
+  UNVERIFIED  anon INSERT-only policy over HTTP (no select/update/delete for anon)
+          -> PGlite superuser bypasses RLS by design. Table GRANTs are proven above; the policy itself is proven by db/live.proof.mjs against the real Supabase project with an anon JWT.
+
+  PASS 37   FAIL 0   UNVERIFIED 1
+  LEAD CAPTURE: ALL HOLD
+
