@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OwoWorks production web server.
+ * Promota production web server.
  *
  * Serves the static site in apps/web and injects window.OWOWORKS at runtime
  * from environment variables (SUPABASE_URL, SUPABASE_ANON_KEY). Nothing is

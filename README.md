@@ -1,9 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="apps/web/assets/identity/banner-dark.png" />
-  <img src="apps/web/assets/identity/banner-light.png" alt="OwoWorks — Naija promotes the world" width="100%" />
+  <img src="apps/web/assets/identity/banner-light.png" alt="Promota — Naija promotes the world" width="100%" />
 </picture>
 
-# OwoWorks — Naija promotes the world
+# Promota — Naija promotes the world
 
 Money that works as hard as you do. A two-sided promotion marketplace: businesses fund
 campaigns; verified Nigerians promote from their own accounts with disclosure and earn mobile
@@ -36,4 +36,4 @@ docs/              BRAND.md, BRAND-SKILLS.md
 - The form validates and discards. No backend, no auth, no lead capture yet.
 - `noindex` stays until the SEO-D1 removal trigger is met (see amplo `docs/SEO.md`).
 - RLS policies are deployed but UNPROVEN — staging with real JWTs required.
-- "OwoWorks" cleared a web prior-art check only. Trademark + CAC + domain: UNVERIFIED.
+- "Promota" cleared a web prior-art check only. Trademark + CAC + domain: UNVERIFIED.

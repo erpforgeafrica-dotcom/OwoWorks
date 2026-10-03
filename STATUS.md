@@ -1,4 +1,4 @@
-# STATUS.md — verified state of the OwoWorks repo
+# STATUS.md — verified state of the Promota repo
 
 **Date:** 2026-10-03. **Rule:** nothing below is claimed without a passing check. Items that
 cannot be proven here are marked UNVERIFIED with their proof venue, never passed.
@@ -9,7 +9,7 @@ The system code is the audited, repaired output of the `amplo` build (8 commits,
 41/0/0 GREEN): double-entry ledger with deferred-constraint enforcement, escrow-before-live,
 task state machine with 24h auto-approve, payout eligibility, dispute lifecycle, RBAC with
 trigger-guarded roles, typed settings, append-only audit, RLS policies. This repo rebrands it
-as OwoWorks and optimises the web surface; it does not re-prove the database.
+as Promota and optimises the web surface; it does not re-prove the database.
 
 ## Verified now (local engine — PGlite/WASM, a real PostgreSQL build)
 
@@ -76,9 +76,9 @@ raw command output + artifact hashes), plus `PROOF/C3-railway-live/` for the dep
 
 ## Blockers (owner actions)
 
-1. Trademark + CAC + domain clearance for "OwoWorks" (web prior-art done; legal clearance NOT done).
+1. Trademark + CAC + domain clearance for "Promota" (web prior-art done; legal clearance NOT done).
 2. ~~`gh auth login` → create `erpforgeafrica-dotcom/owoworks` remote → push.~~ **DONE** — remote
-   `erpforgeafrica-dotcom/OwoWorks`, `main` pushed and verified on GitHub (HEAD `f9ecdd2`).
+   `erpforgeafrica-dotcom/Promota`, `main` pushed and verified on GitHub (HEAD `f9ecdd2`).
 3. ~~Railway target account + deploy.~~ **DONE** — deployed to `Engr.emmamickado@gmail.com` /
    `m1ckad0's Projects` after the `sabistack.acad` trial hit its provision cap. Live URL verified
    (`PROOF/C3-railway-live/`).

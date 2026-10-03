@@ -2,7 +2,7 @@
   "name": "owoworks",
   "version": "0.1.0",
   "private": true,
-  "description": "OwoWorks — Naija promotes the world. Verified brand-promotion work, paid in mobile data and cash.",
+  "description": "Promota — Naija promotes the world. Verified brand-promotion work, paid in mobile data and cash.",
   "type": "module",
   "engines": {
     "node": ">=22"
