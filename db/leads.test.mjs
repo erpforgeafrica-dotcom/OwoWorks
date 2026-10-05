@@ -234,14 +234,33 @@ await withDb(async db => {
     const n = await db.query(`select count(*)::int as n from leads where phone = '08031112222'`);
     check('submit_lead actually stored the row, normalised from spaced input',
       n.rows[0].n === 1, `rows=${n.rows[0].n}`);
+    globalThis.__SUBMIT_FIRST = v;
   }
   {
+    const first = globalThis.__SUBMIT_FIRST;
     const r = await db.query(
       `select public.submit_lead('promoter','Ada Again','+2348031112222',null,null,null,
                                 null,null,null, now(), null) as r`);
-    check('submit_lead refuses a duplicate number with the same answer every time',
-      r.rows[0].r.ok === false &&
-      /already on the list/i.test(r.rows[0].r.message), JSON.stringify(r.rows[0].r));
+    const v = r.rows[0].r;
+    const firstKeys = Object.keys(first).sort().join(',');
+    const secondKeys = Object.keys(v).sort().join(',');
+    check('submit_lead returns the SAME success shape for a known number (no membership oracle)',
+      v.ok === true && firstKeys === secondKeys &&
+      /^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/.test(v.referral_code) &&
+      typeof v.position === 'number' && typeof v.referred === 'number' &&
+      !('message' in v), JSON.stringify(v));
+    check('a returning number recovers its original code (same keys, same value shapes)',
+      v.referral_code === first.referral_code,
+      `first=${JSON.stringify(first)} second=${JSON.stringify(v)}`);
+    check('known-vs-new responses carry no distinguishing status or message',
+      v.ok === first.ok && !('message' in v) && !('message' in first),
+      JSON.stringify(v));
+    check('repeat submission response contains NO personal data',
+      !JSON.stringify(v).toLowerCase().includes('0803') &&
+      !JSON.stringify(v).toLowerCase().includes('ada'),
+      JSON.stringify(v));
+    const n = await db.query(`select count(*)::int as n from leads where phone = '08031112222'`);
+    check('a repeat submission stores no second row', n.rows[0].n === 1, `rows=${n.rows[0].n}`);
   }
   {
     const r = await db.query(
