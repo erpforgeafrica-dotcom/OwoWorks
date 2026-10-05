@@ -13,6 +13,12 @@ Proven over HTTPS with anon + real authenticated JWTs: visitor can submit; dupli
 - `db/leads.test.mjs`: duplicate assertion replaced with 5 known-vs-new indistinguishability checks (shape, code recovery, no message key, no PII, single row).
 - Team D fresh run: `npm test` → **EXIT 0** — phone 17/0, lead 24/0, ledger 56/0/2 UNVERIFIED, leads 41/0/1 UNVERIFIED.
 - **Residual, accepted:** timing side-channel (no constant-time padding); true position/referred values are plausible-not-identical; pre-existing lane asymmetry (bad lane + known phone → success vs bad lane + new phone → constraint error) preserved for minimal diff — logged as follow-up GH-1b, LOW severity.
+## 5. GH-1 applied to STAGING + oracle proven dead live (TESTED, this cycle)
+
+- `--status` (read-only): 0001–0006 APPLIED, checksums match (no drift), only `0007_fix_submit_lead_oracle.sql` PENDING.
+- Apply: `OK 0007_fix_submit_lead_oracle.sql 494ms`, ledger now 7. Advisory lock held/released cleanly.
+- Throwaway TEMP check (not committed): fresh number submitted twice over HTTPS — both return status 200, identical key shape `[ok,position,referral_code,referred]`, `ok=true` both times, original code recovered, no `message` key, no phone digits in either body. Cleanup 204/204. **ORACLE_DEAD_ON_STAGING=true.**
+- **GH-1 is now CLOSED end-to-end** (code + staging + live proof + cleanup). The `live.proof.mjs` duplicate step (which asserts the OLD `ok:false` refusal) is now obsolete by design — it must be updated to the new shape when next run, otherwise it will FAIL against fixed behavior.
 - **Staging still runs the old function.** The oracle remains LIVE on staging until 0007 is applied there via an authorized remote migration — currently banned, needs a separate owner go.
 
 ## 3. Team A status — QUOTA-BLOCKED, not started
