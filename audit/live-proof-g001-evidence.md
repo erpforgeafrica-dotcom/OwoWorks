@@ -25,7 +25,14 @@ Proven over HTTPS with anon + real authenticated JWTs: visitor can submit; dupli
 
 `promota-team-a` (gemini-3.6-flash free tier) returned quota-exceeded on dispatch; retry ETA ~2h. No Team A files exist yet. Options for owner: (a) wait ~2h and re-dispatch on the pinned model (preserves the 4-family roster exactly), or (b) run the Team A prompt package on a substitute PASS-listed model now (independence preserved — still a different family from B/C/D — roster model changes).
 
-## 4. Effective release posture after this cycle
+## 6. Team A partial delivery received (2026-10-05 ~10:13, before quota death)
 
-- **G-001 CLOSED.** G-003 replaced by G-003′ (client fetch path untested) — still open. G-002 scope contradiction + G-004 CI still open. **GH-1 code-complete, staging-deploy pending.**
-- Verdict stands: **CONDITIONAL GO (lead-capture-only pilot) with blocking gates; no consequential deployment until GH-1 is applied to staging + G-002 resolved.** Full public marketplace remains NO-GO.
+`audit/business-model-audit.md` (1 of 4 Team A files) committed as genuine Team A output on the pinned model. Quality: correctly labeled, consistent with verified evidence. **Two staleness corrections:**
+- B-010 ("RLS UNVERIFIED, proof BANNED") is SUPERSEDED by §1 above — RLS proven live 14/14 after this file was written.
+- §9 pilot conditions "oracle fixed (0007 — DONE)" and "RLS verified (G-001)" are both now DONE + live-tested (§5).
+- Still missing (quota-blocked, retry after reset): `product-completeness-matrix.csv`, `route-content-inventory.csv`, `product-claims-register.csv`.
+
+## 4. Effective release posture after this cycle (updated: GH-1 fully closed, §5)
+
+- **G-001 CLOSED.** G-003 replaced by G-003′ (client fetch path untested) — still open. G-002 scope contradiction + G-004 CI still open. **GH-1 CLOSED end-to-end.**
+- Verdict stands: **CONDITIONAL GO (lead-capture-only pilot) with blocking gates; no consequential deployment until G-002 scope alignment is published.** Full public marketplace remains NO-GO.
