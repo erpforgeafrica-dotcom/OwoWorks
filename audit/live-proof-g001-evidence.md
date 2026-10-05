@@ -27,10 +27,9 @@ Proven over HTTPS with anon + real authenticated JWTs: visitor can submit; dupli
 
 ## 6. Team A partial delivery received (2026-10-05 ~10:13, before quota death)
 
-`audit/business-model-audit.md`, `audit/product-completeness-matrix.csv`, `audit/product-claims-register.csv` (3 of 4 Team A files) committed as genuine Team A output on the pinned model. Quality: correctly labeled, consistent with verified evidence. **Two staleness corrections (apply to all three):**
+`audit/business-model-audit.md`, `audit/product-completeness-matrix.csv`, `audit/product-claims-register.csv`, `audit/route-content-inventory.csv` (**4 of 4 Team A files — complete set recovered** despite the quota failure killing the agent's return message) committed as genuine Team A output on the pinned model. Quality: correctly labeled, consistent with verified evidence. **Two staleness corrections (apply to all four):**
 - B-010 and claims P-004/P-005 ("RLS UNVERIFIED, proof BANNED") are SUPERSEDED by §1 above — RLS proven live 14/14 after these files were written.
-- §9 pilot conditions "oracle fixed (0007 — DONE)" and "RLS verified (G-001)" are both now DONE + live-tested (§5).
-- Still missing (quota-blocked, retry after reset): `route-content-inventory.csv`.
+- §9 pilot conditions "oracle fixed (0007 — DONE)" and "RLS verified (G-001)" are both now DONE + live-tested (§5). Nothing still missing from Team A.
 
 ## 4. Effective release posture after this cycle (updated: GH-1 fully closed, §5)
 
