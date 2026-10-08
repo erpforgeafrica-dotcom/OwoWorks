@@ -43,6 +43,33 @@ const TYPES = {
 
 const CACHEABLE = new Set(['.png', '.webp', '.svg', '.ico']);
 
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+const rateLimitMap = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+
+  const requests = rateLimitMap.get(ip) || [];
+  const recentRequests = requests.filter(t => t > windowStart);
+
+  if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
+    return false;
+  }
+
+  recentRequests.push(now);
+  rateLimitMap.set(ip, recentRequests);
+  return true;
+}
+
+function getClientIp(req) {
+  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || req.headers['x-real-ip']
+    || req.socket?.remoteAddress
+    || 'unknown';
+}
+
 const CSP = [
   "default-src 'self'",
   "script-src 'self'",
@@ -86,11 +113,19 @@ const server = createServer(async (req, res) => {
     let rel = decodeURIComponent(url.pathname);
 
     if (rel === '/config.js') {
+      const ip = getClientIp(req);
+      if (!checkRateLimit(ip)) {
+        return send(res, 429, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'retry-after': Math.ceil(RATE_LIMIT_WINDOW_MS / 1000) }, JSON.stringify({ error: 'Rate limit exceeded' }), headOnly);
+      }
       const body = Buffer.from(runtimeConfigBody(), 'utf8');
       return send(res, 200, { ...SECURITY_HEADERS, 'content-type': 'text/javascript; charset=utf-8', 'content-length': body.length, 'cache-control': 'no-store' }, body, headOnly);
     }
 
     if (rel === '/healthz') {
+      const ip = getClientIp(req);
+      if (!checkRateLimit(ip)) {
+        return send(res, 429, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'retry-after': Math.ceil(RATE_LIMIT_WINDOW_MS / 1000) }, JSON.stringify({ error: 'Rate limit exceeded' }), headOnly);
+      }
       const body = Buffer.from(JSON.stringify({ ok: true, config: CONFIGURED }), 'utf8');
       return send(res, 200, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'content-length': body.length, 'cache-control': 'no-store' }, body, headOnly);
     }

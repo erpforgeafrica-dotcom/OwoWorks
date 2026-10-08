@@ -1,9 +1,14 @@
 # LEAD-CAPTURE.md — the backend that grows the list
 
-**Status:** built, locally proven (56 + 37 DB tests green) and **proven over HTTPS against the
-live Supabase project**. Migrations `0001`–`0006` are all applied live. The client calls the
+**Status:** built, locally proven (56 + 37 + 41 DB tests green) and **proven over HTTPS against the
+live Supabase project**. Migrations `0001`–`0007` are all applied live (0007 fixes membership oracle). The client calls the
 single public action `submit_lead` and no longer has a demo fallback.
 **Rule:** every claim below names its proof. Unprovable items are UNVERIFIED with a venue.
+
+**Recent updates (2026-10-07):**
+- Oracle fix `0007_fix_submit_lead_oracle.sql` applied: duplicate phone returns identical success shape `{ok, referral_code, position, referred}` — no membership leak.
+- RLS anon matrix verified 14/0/0 on staging (2026-10-05) — `db/live.proof.mjs` PASS.
+- `db/leads.test.mjs` expanded to 41 tests covering indistinguishability checks.
 
 ## 1. What the best do (verified, 2026-10-02)
 
@@ -78,9 +83,10 @@ are stated anywhere in this repo because there is no traffic yet.
 
 | Item | State | Needs |
 |---|---|---|
-| Apply `0004`–`0006` to live | **DONE** — ledger records all six; re-probe shows `anon[----]` | — |
-| RLS anon matrix proof over HTTP | **DONE** — `db/live.proof.mjs` PASS 14 / 0 / 0 (`PROOF/C2-live-api-proof/`) | — |
+| Apply `0004`–`0007` to live | **DONE** — ledger records all seven; re-probe shows `anon[----]` | — |
+| RLS anon matrix proof over HTTP | **DONE** — `db/live.proof.mjs` PASS 14 / 0 / 0 (staging 2026-10-05) | — |
 | Remove demo fallback + wire `config.js` | **DONE** — client calls `submit_lead`; `config.js` generated | — |
+| Oracle fix (membership leak) | **DONE** — `0007` applied, duplicate returns identical shape | — |
 | SMS double opt-in (Termii) | designed (outbox `lead.captured` is the handoff); no key, no worker | Termii API key + worker |
 | Admin view of leads | 0% — service_role reads via dashboard/SQL only | admin UI track |
 

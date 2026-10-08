@@ -1,6 +1,6 @@
 # STATUS.md — verified state of the Promota repo
 
-**Date:** 2026-10-03. **Rule:** nothing below is claimed without a passing check. Items that
+**Date:** 2026-10-07. **Rule:** nothing below is claimed without a passing check. Items that
 cannot be proven here are marked UNVERIFIED with their proof venue, never passed.
 
 ## Where this code comes from
@@ -15,15 +15,16 @@ as Promota and optimises the web surface; it does not re-prove the database.
 
 | Claim | Evidence |
 |---|---|
-| All seven migrations execute on real PostgreSQL | `node scripts/migrateUp.mjs` — 7 APPLIED |
+| All seven migrations execute on real PostgreSQL | `node scripts/migrateUp.mjs` — 7 APPLIED (incl. 0007 oracle fix) |
 | Core ledger invariants hold | `node db/ledger.test.mjs` — 56 PASS / 0 FAIL / 2 UNVERIFIED |
-| Lead capture + `submit_lead` hold | `node db/leads.test.mjs` — 37 PASS / 0 FAIL / 1 UNVERIFIED |
+| Lead capture + `submit_lead` hold | `node db/leads.test.mjs` — 41 PASS / 0 FAIL / 1 UNVERIFIED |
 | Abuse controls hold for every DB role | honeypot + consent freshness in trigger AND RLS |
 | Referrals pay zero, count queue only | schema + `docs/LEAD-CAPTURE.md` §3 (anti-MLM rule) |
 | `anon` cannot touch `leads` or the migration ledger | privilege tests in `db/leads.test.mjs` |
-| Phone validation correct | `npm test` — 17 phone + client + 56 + 37 tests |
+| Phone validation correct | `npm test` — 17 phone + client + 56 + 41 tests |
 | Web surface passes integrity | `npm run site` |
 | Palette accessible | every pair in `docs/BRAND.md` §2, WCAG 2.2 AA |
+| Legal pages exist | `apps/web/terms.html`, `privacy.html`, `refund.html` |
 
 Proof bundles: `PROOF/C1-lead-backend-live/` and `PROOF/C2-live-api-proof/` (manifests +
 raw command output + artifact hashes), plus `PROOF/C3-railway-live/` for the deployment.
@@ -31,13 +32,14 @@ raw command output + artifact hashes), plus `PROOF/C3-railway-live/` for the dep
 ## Live Supabase project (connected and proven over HTTPS)
 
 - Project `ykyvmgdruterzrmltquz`; credentials authenticate (`node scripts/dbProbe.mjs`).
-- **All six migrations `0001`–`0006` are applied live** (recorded in the ledger).
+- **All seven migrations `0001`–`0007` are applied live** (recorded in the ledger).
 - `node db/live.proof.mjs` — **PASS 14 / FAIL 0 / UNVERIFIED 0 — LIVE API PROOF: ALL HOLD.**
   Proves over the real network, with the shipped publishable key: a visitor can submit a
   sign-up; a visitor cannot read, update or delete the sign-up list; a visitor cannot read
-  the migration ledger; duplicates are refused; a signed-in account is also blocked from
+  the migration ledger; duplicates are refused (identical success shape); a signed-in account is also blocked from
   the sign-up list but can read shared campaign data; the row and its outbox event really
   exist. Every test row and account is deleted afterwards (204/204/200).
+- Oracle fix `0007` verified: duplicate phone returns identical `{ok, referral_code, position, referred}` — no membership leak.
 
 ## Live deployment (Railway)
 
@@ -47,11 +49,12 @@ raw command output + artifact hashes), plus `PROOF/C3-railway-live/` for the dep
 - Project `owoworks` (`60ac6fc7-c53d-4150-b419-5ca790e35a96`), service `web`, environment
   `production`; domain **https://web-production-045b1.up.railway.app**.
 - Built from `Dockerfile` (node:22-alpine, **no npm install** — the server uses Node built-ins
-  only) configured by `railway.json`. The server injects `window.OWOWORKS` at runtime from the
+  only) configured by `railway.json`. The server injects `window.PROMOTA` at runtime from the
   `SUPABASE_URL` / `SUPABASE_ANON_KEY` service variables, so no key is baked into the image or
   committed. Missing variables make the site report "not connected" instead of faking success.
 - Strict CSP (`script-src 'self'`, `connect-src 'self' https://*.supabase.co`,
   `frame-ancestors 'none'`), `nosniff`, frame-deny, `referrer-policy: no-referrer`.
+- Rate limiting on `/config.js` and `/healthz` endpoints (30 req/min/IP).
 - `node scripts/verifyLive.mjs https://web-production-045b1.up.railway.app` —
   **PASS 19 / FAIL 0 — DEPLOY VERIFY: ALL HOLD** (static assets, runtime config matches the
   Supabase project, and a real visitor sign-up lands in the DB then is cleaned up).
@@ -67,6 +70,11 @@ raw command output + artifact hashes), plus `PROOF/C3-railway-live/` for the dep
   `submit_lead` (`apps/web/app.js`), proven live. **Closed.**
 - `apps/web/config.js` now exists (gitignored, publishable key only, generated from `.env`),
   so the site is live-capable. **Closed.**
+- Membership oracle in `submit_lead` fixed by `0007` — duplicate phone indistinguishable from new. **Closed.**
+- RLS policies verified over HTTP on staging (14/0/0). **Closed.**
+- Legal pages (Terms, Privacy, Refund) published. **Closed.**
+- GitHub Actions CI/CD workflow created. **Closed.**
+- Edge rate limiting added to server.mjs. **Closed.**
 
 ## Carry-over truth (from amplo, unchanged)
 

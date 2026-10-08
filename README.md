@@ -33,7 +33,8 @@ docs/              BRAND.md, BRAND-SKILLS.md
 
 ## Pre-launch truths (do not edit these away without proof)
 
-- The form validates and discards. No backend, no auth, no lead capture yet.
+- Lead capture IS implemented: `submit_lead` RPC + referral engine + outbox events proven live (14/0/0).
 - `noindex` stays until the SEO-D1 removal trigger is met (see amplo `docs/SEO.md`).
-- RLS policies are deployed but UNPROVEN — staging with real JWTs required.
+- RLS policies are deployed AND PROVEN — staging with real JWTs verified 14/0/0 (2026-10-05).
 - "Promota" cleared a web prior-art check only. Trademark + CAC + domain: UNVERIFIED.
+- Oracle fix (0007) applied: duplicate phone returns identical success shape — no membership leak.

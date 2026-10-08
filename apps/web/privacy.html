@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-NG" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Promota Privacy Policy. How we collect, use, and protect your data under NDPA. Lead capture, verified promoters, businesses, data sharing, retention, your rights.">
+  <meta name="theme-color" content="#04120b" id="themeColor">
+  <link rel="icon" type="image/svg+xml" href="assets/identity/favicon.svg">
+  <title>Privacy Policy — Promota</title>
+  <script src="theme-boot.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/" aria-label="Promota home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 26 26" role="img" aria-label="Promota mark"><rect x="1" y="1" width="24" height="24" rx="7" fill="none" stroke="#f4dc9d" stroke-width="2.4"/><path d="M6 17 A7 7 0 0 1 20 17" fill="none" stroke="#d9b263" stroke-width="2.4" stroke-linecap="round"/><path d="M17.5 8.5 L20 6 L22.5 8.5 M20 6 L20 12" fill="none" stroke="#f4dc9d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="brand-name">Promota<small>Nigeria pilot</small></span>
+      </a>
+      <nav class="links" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/refund.html">Refund Policy</a>
+      </nav>
+      <div class="nav-cta">
+        <button class="theme-btn" type="button" id="themeBtn" aria-pressed="false" aria-label="Switch to light theme">Light</button>
+        <a class="btn ghost" href="/" data-lane="promoter">Back to Promota</a>
+      </div>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+    </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <button class="theme-btn" type="button" id="themeBtnMobile" aria-pressed="false" aria-label="Switch to light theme">Light theme</button>
+      <a href="/">Home</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/refund.html">Refund Policy</a>
+    </nav>
+  </header>
+
+  <main id="main" class="legal-page">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p class="legal-meta">Effective date: 2026-10-07 | Last updated: 2026-10-07</p>
+
+      <section>
+        <h2>1. Data Controller</h2>
+        <p>Promota is the data controller. Contact: <a href="mailto:privacy@promota.ng">privacy@promota.ng</a></p>
+      </section>
+
+      <section>
+        <h2>2. Data We Collect</h2>
+        <h3>From Promoters (Lead Capture)</h3>
+        <ul>
+          <li>Full name</li>
+          <li>Phone number (Nigerian MSISDN, normalized to 080xxxxxxxx format)</li>
+          <li>Platform preference (YouTube/Facebook/Other)</li>
+          <li>Optional note</li>
+          <li>Referral code (if invited)</li>
+          <li>UTM parameters (source, medium, campaign, content, term)</li>
+          <li>Consent timestamp (client-side + server-side)</li>
+          <li>Honeypot field (bot detection, discarded)</li>
+        </ul>
+        <h3>From Verified Promoters</h3>
+        <ul>
+          <li>Verified phone status (OTP verification via Termii)</li>
+          <li>Network detection (MTN/Glo/Airtel/9mobile)</li>
+          <li>Social media profile URL + follower count (via OAuth)</li>
+          <li>KYC Tier (T0/T1/T2) and age verification status</li>
+          <li>Identity reference (provider token or HMAC of NIN/BVN — never raw ID)</li>
+          <li>Task submissions, proof URLs, verification outcomes</li>
+          <li>Wallet balance, payout history</li>
+        </ul>
+        <h3>From Businesses</h3>
+        <ul>
+          <li>Business name, contact person, email</li>
+          <li>Campaign details, budget, escrow funding records</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Legal Basis (NDPA)</h2>
+        <ul>
+          <li><strong>Consent (s.27):</strong> Lead capture requires explicit, timestamped consent. Honeypot and 30-minute freshness window enforced.</li>
+          <li><strong>Contract (s.28):</strong> Verified promoter data processed to fulfill campaign tasks and payouts.</li>
+          <li><strong>Legal Obligation (s.29):</strong> KYC/AML records retained per CBN/SEC requirements.</li>
+          <li><strong>Legitimate Interest (s.30):</strong> Fraud prevention, trust scoring, abuse controls.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>4. How We Use Your Data</h2>
+        <ul>
+          <li>Operate the promoter queue and referral system</li>
+          <li>Verify identity and eligibility for tasks</li>
+          <li>Process task verification and reward calculation</li>
+          <li>Execute payouts (data bundles via licensed aggregator, cash via payment gateway)</li>
+          <li>Prevent fraud (honeypot, consent freshness, unique phone, trust score, human review)</li>
+          <li>Resolve disputes and enforce anti-MLM rules</li>
+          <li>Comply with NDPA, SEC, and financial regulations</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Data Sharing</h2>
+        <ul>
+          <li><strong>Termii (SMS/WhatsApp OTP):</strong> Phone number only, for verification.</li>
+          <li><strong>Data Aggregator (MTN/Glo/Airtel bundles):</strong> Phone + network only, for fulfillment.</li>
+          <li><strong>Payment Gateway (Flutterwave/Paystack):</strong> Bank details only, for cash payouts.</li>
+          <li><strong>KYC Provider (Smile Identity/VerifyMe):</strong> Identity documents, for verification.</li>
+          <li><strong>Platform APIs (YouTube/Facebook):</strong> Public profile + follower count, via OAuth.</li>
+          <li><strong>Legal/Regulatory:</strong> When required by Nigerian law or court order.</li>
+        </ul>
+        <p>We never sell personal data. Referral codes show masked inviter name only (First Last-initial).</p>
+      </section>
+
+      <section>
+        <h2>6. Data Retention</h2>
+        <ul>
+          <li>Lead capture data: 2 years from last activity, or until deletion request.</li>
+          <li>Verified promoter data: 7 years (financial records) or until deletion request.</li>
+          <li>KYC/AML data: 7 years per CBN regulations.</li>
+          <li>Dispute records: 3 years after resolution.</li>
+          <li>Audit logs: 7 years (append-only, immutable).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>7. Your Rights (NDPA ss. 34–38)</h2>
+        <ul>
+          <li><strong>Access:</strong> Request a copy of your data.</li>
+          <li><strong>Rectification:</strong> Correct inaccurate data.</li>
+          <li><strong>Erasure:</strong> Request deletion (subject to legal retention requirements).</li>
+          <li><strong>Restriction:</strong> Limit processing in certain cases.</li>
+          <li><strong>Portability:</strong> Receive your data in a structured format.</li>
+          <li><strong>Objection:</strong> Object to processing based on legitimate interest.</li>
+          <li><strong>Withdraw Consent:</strong> Withdraw consent at any time (does not affect prior processing).</li>
+        </ul>
+        <p>To exercise rights, email <a href="mailto:privacy@promota.ng">privacy@promota.ng</a> with "Data Rights Request" in subject.</p>
+      </section>
+
+      <section>
+        <h2>8. Security</h2>
+        <ul>
+          <li>Supabase Row Level Security (RLS) on all tables — anon cannot read private data.</li>
+          <li>Double-entry ledger with deferred balance constraints.</li>
+          <li>Immutable audit log for all sensitive operations.</li>
+          <li>Strict CSP, nosniff, frame-deny, referrer-policy: no-referrer.</li>
+          <li>Publishable key only in client; service role never exposed.</li>
+          <li>Rate limiting on public endpoints.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>9. International Transfers</h2>
+        <p>Data is processed in Nigeria and on Supabase (US/EU). We rely on NDPA s.42 adequacy decisions and standard contractual clauses where applicable.</p>
+      </section>
+
+      <section>
+        <h2>10. Children</h2>
+        <p>Promota is not directed to persons under 18. We do not knowingly collect data from minors. Age verification is required for cash payouts.</p>
+      </section>
+
+      <section>
+        <h2>11. Changes</h2>
+        <p>We will notify registered users of material changes via email and update the effective date above.</p>
+      </section>
+
+      <section>
+        <h2>12. Contact</h2>
+        <p>Data Protection Officer: <a href="mailto:privacy@promota.ng">privacy@promota.ng</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="foot-inner">
+      <div>
+        <h2>Promota</h2>
+        <p>Naija promotes the world. Money that works as hard as you do.</p>
+      </div>
+      <div>
+        <h2>Status</h2>
+        <p>Pilot build. Not yet open. No payment is processed on this site.</p>
+      </div>
+      <div>
+        <h2>Policy</h2>
+        <p>Every paid post carries a disclosure tag. No fake likes, follows or views are bought or sold.</p>
+      </div>
+    </div>
+    <p class="copy">Promota is a pilot project. Earnings depend on checked outcomes and are not guaranteed.</p>
+    <nav class="legal-links">
+      <a href="terms.html">Terms of Service</a> · <a href="privacy.html">Privacy Policy</a> · <a href="refund.html">Refund Policy</a>
+    </nav>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

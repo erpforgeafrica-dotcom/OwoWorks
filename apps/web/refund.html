@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-NG" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Promota Refund Policy. Business refunds, promoter disputes, data/cash issues, non-refundable items, request process, FCCPA/NDPA compliant.">
+  <meta name="theme-color" content="#04120b" id="themeColor">
+  <link rel="icon" type="image/svg+xml" href="assets/identity/favicon.svg">
+  <title>Refund Policy — Promota</title>
+  <script src="theme-boot.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main" style="position:absolute;left:-9999px;">Skip to content</a>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/" aria-label="Promota home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 26 26" role="img" aria-label="Promota mark"><rect x="1" y="1" width="24" height="24" rx="7" fill="none" stroke="#f4dc9d" stroke-width="2.4"/><path d="M6 17 A7 7 0 0 1 20 17" fill="none" stroke="#d9b263" stroke-width="2.4" stroke-linecap="round"/><path d="M17.5 8.5 L20 6 L22.5 8.5 M20 6 L20 12" fill="none" stroke="#f4dc9d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="brand-name">Promota<small>Nigeria pilot</small></span>
+      </a>
+      <nav class="links" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="nav-cta">
+        <button class="theme-btn" type="button" id="themeBtn" aria-pressed="false" aria-label="Switch to light theme">Light</button>
+        <a class="btn ghost" href="/" data-lane="promoter">Back to Promota</a>
+      </div>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+    </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <button class="theme-btn" type="button" id="themeBtnMobile" aria-pressed="false" aria-label="Switch to light theme">Light theme</button>
+      <a href="/">Home</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/privacy.html">Privacy Policy</a>
+    </nav>
+  </header>
+
+  <main id="main" class="legal-page">
+    <div class="container">
+      <h1>Refund Policy</h1>
+      <p class="legal-meta">Effective date: 2026-10-07 | Last updated: 2026-10-07</p>
+
+      <section>
+        <h2>1. Business Campaign Refunds</h2>
+        <h3>Unspent Budget</h3>
+        <p>Campaigns operate on an escrow model. Your budget is fully funded before a campaign goes live. Unspent funds are automatically returned to you when:</p>
+        <ul>
+          <li>The campaign reaches its end date</li>
+          <li>The campaign is paused by you</li>
+          <li>The campaign auto-pauses at 90% budget utilization (hard ceiling)</li>
+          <li>The campaign is settled after all tasks are verified</li>
+        </ul>
+        <p>Refunds of unspent escrow are processed within 5 business days to the original payment method.</p>
+
+        <h3>Disputed Outcomes</h3>
+        <ul>
+          <li>If a task outcome is disputed and the dispute is upheld in your favor, the outcome amount is credited back to your campaign budget.</li>
+          <li>Dispute resolution follows a 72-hour SLA with a named reviewer.</li>
+          <li>Credited amounts remain in your campaign escrow for future tasks or can be refunded on request.</li>
+        </ul>
+
+        <h3>Campaign Cancellation</h3>
+        <ul>
+          <li>You may cancel a campaign before it goes live for a full refund.</li>
+          <li>After a campaign goes live, you may pause it. Unspent funds are refundable.</li>
+          <li>Already-verified and paid outcomes are not refundable.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>2. Promoter Reward Disputes</h2>
+        <ul>
+          <li>Promoters may raise disputes on task verification outcomes within 7 days of the verification decision.</li>
+          <li>Disputes follow the lifecycle: open → under review → upheld/rejected/withdrawn/expired.</li>
+          <li>If upheld, the reward is paid per the original task terms.</li>
+          <li>If rejected, the original verification stands. No refund of "lost" rewards — rewards are only paid for checked results.</li>
+          <li>Fraudulent submissions result in clawback of any paid rewards and account suspension.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>3. Data Bundle Fulfillment Issues</h2>
+        <ul>
+          <li>Data bundles (MTN/Glo/Airtel/9mobile) are fulfilled via a licensed aggregator.</li>
+          <li>If a bundle fails to deliver due to aggregator error, we will retry once automatically.</li>
+          <li>If retry fails, the reward is re-credited to your wallet for re-fulfillment or cash conversion (if KYC Tier 2 + age verified).</li>
+          <li>Network detection errors: if we detect the wrong network, contact support within 48 hours for correction.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>4. Cash Payout Issues</h2>
+        <ul>
+          <li>Cash payouts require KYC Tier 2 + age verification, minimum ₦1,000 balance.</li>
+          <li>Payouts are batched per schedule (settings.payout.batch_size).</li>
+          <li>If a payout fails due to provider error (bank/OPay/Kuda/PalmPay), we retry per the idempotency key.</li>
+          <li>Failed payouts after retries are held in your wallet. Contact support for manual resolution.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>5. Non-Refundable Items</h2>
+        <ul>
+          <li>Verified and paid task outcomes (clicks, sign-ups, promo-code uses).</li>
+          <li>Data bundles successfully delivered to the verified number.</li>
+          <li>Cash payouts successfully settled to the verified account.</li>
+          <li>Fraud reserve (5% of campaign budget) — released after campaign settlement if no fraud.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>6. Refund Request Process</h2>
+        <ol>
+          <li>Email <a href="mailto:refunds@promota.ng">refunds@promota.ng</a> with: campaign ID / task ID, reason, amount.</li>
+          <li>We acknowledge within 24 hours and investigate within 5 business days.</li>
+          <li>Approved refunds are processed to the original payment method within 5 business days.</li>
+          <li>Disputed decisions may be escalated per the dispute resolution process.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>7. Regulatory Compliance</h2>
+        <p>This policy complies with the Federal Competition and Consumer Protection Act (FCCPA) 2018 and NDPA 2023. Nigerian consumer rights are respected in full.</p>
+      </section>
+
+      <section>
+        <h2>8. Contact</h2>
+        <p>Refund inquiries: <a href="mailto:refunds@promota.ng">refunds@promota.ng</a></p>
+        <p>General support: <a href="mailto:support@promota.ng">support@promota.ng</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="foot-inner">
+      <div>
+        <h2>Promota</h2>
+        <p>Naija promotes the world. Money that works as hard as you do.</p>
+      </div>
+      <div>
+        <h2>Status</h2>
+        <p>Pilot build. Not yet open. No payment is processed on this site.</p>
+      </div>
+      <div>
+        <h2>Policy</h2>
+        <p>Every paid post carries a disclosure tag. No fake likes, follows or views are bought or sold.</p>
+      </div>
+    </div>
+    <p class="copy">Promota is a pilot project. Earnings depend on checked outcomes and are not guaranteed.</p>
+    <nav class="legal-links">
+      <a href="terms.html">Terms of Service</a> · <a href="privacy.html">Privacy Policy</a> · <a href="refund.html">Refund Policy</a>
+    </nav>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
