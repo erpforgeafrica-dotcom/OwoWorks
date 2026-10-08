@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="description" content="Promota Privacy Policy. How we collect, use, and protect your data under NDPA. Lead capture, verified promoters, businesses, data sharing, retention, your rights.">
+  <meta name="description" content="Promota Privacy Policy. Task-based rewards, phone verification, points, referrals, data/cash redemption, your rights under NDPA.">
   <meta name="theme-color" content="#04120b" id="themeColor">
   <link rel="icon" type="image/svg+xml" href="assets/identity/favicon.svg">
   <title>Privacy Policy — Promota</title>
@@ -41,7 +41,7 @@
   <main id="main" class="legal-page">
     <div class="container">
       <h1>Privacy Policy</h1>
-      <p class="legal-meta">Effective date: 2026-10-07 | Last updated: 2026-10-07</p>
+      <p class="legal-meta">Effective date: 2026-10-08 | Last updated: 2026-10-08</p>
 
       <section>
         <h2>1. Data Controller</h2>
@@ -50,12 +50,11 @@
 
       <section>
         <h2>2. Data We Collect</h2>
-        <h3>From Promoters (Lead Capture)</h3>
+        <h3>From Promoters (Registration)</h3>
         <ul>
           <li>Full name</li>
           <li>Phone number (Nigerian MSISDN, normalized to 080xxxxxxxx format)</li>
-          <li>Platform preference (YouTube/Facebook/Other)</li>
-          <li>Optional note</li>
+          <li>Optional note (city, preferences)</li>
           <li>Referral code (if invited)</li>
           <li>UTM parameters (source, medium, campaign, content, term)</li>
           <li>Consent timestamp (client-side + server-side)</li>
@@ -65,26 +64,26 @@
         <ul>
           <li>Verified phone status (OTP verification via Termii)</li>
           <li>Network detection (MTN/Glo/Airtel/9mobile)</li>
-          <li>Social media profile URL + follower count (via OAuth)</li>
-          <li>KYC Tier (T0/T1/T2) and age verification status</li>
+          <li>Task submissions, completion status, verification outcomes</li>
+          <li>Points balance, level, referral count</li>
+          <li>KYC Tier (T0/T1/T2) and age verification status (for cash unlock)</li>
           <li>Identity reference (provider token or HMAC of NIN/BVN — never raw ID)</li>
-          <li>Task submissions, proof URLs, verification outcomes</li>
-          <li>Wallet balance, payout history</li>
+          <li>Wallet balance, redemption history (data/cash)</li>
         </ul>
-        <h3>From Businesses</h3>
+        <h3>From Referrals</h3>
         <ul>
-          <li>Business name, contact person, email</li>
-          <li>Campaign details, budget, escrow funding records</li>
+          <li>Referrer's invite code (masked name only)</li>
+          <li>Referee's phone + referral points earned</li>
         </ul>
       </section>
 
       <section>
         <h2>3. Legal Basis (NDPA)</h2>
         <ul>
-          <li><strong>Consent (s.27):</strong> Lead capture requires explicit, timestamped consent. Honeypot and 30-minute freshness window enforced.</li>
-          <li><strong>Contract (s.28):</strong> Verified promoter data processed to fulfill campaign tasks and payouts.</li>
-          <li><strong>Legal Obligation (s.29):</strong> KYC/AML records retained per CBN/SEC requirements.</li>
-          <li><strong>Legitimate Interest (s.30):</strong> Fraud prevention, trust scoring, abuse controls.</li>
+          <li><strong>Consent (s.27):</strong> Registration requires explicit, timestamped consent. Honeypot and 30-minute freshness window enforced.</li>
+          <li><strong>Contract (s.28):</strong> Verified promoter data processed to assign tasks, verify completions, award points, process redemptions.</li>
+          <li><strong>Legal Obligation (s.29):</strong> KYC/AML records retained per CBN/SEC requirements for cash payouts.</li>
+          <li><strong>Legitimate Interest (s.30):</strong> Fraud prevention, trust scoring, abuse controls, referral tracking.</li>
         </ul>
       </section>
 
@@ -92,9 +91,10 @@
         <h2>4. How We Use Your Data</h2>
         <ul>
           <li>Operate the promoter queue and referral system</li>
-          <li>Verify identity and eligibility for tasks</li>
-          <li>Process task verification and reward calculation</li>
-          <li>Execute payouts (data bundles via licensed aggregator, cash via payment gateway)</li>
+          <li>Assign and verify tasks, award points</li>
+          <li>Calculate level progression and referral requirements</li>
+          <li>Process data bundle redemptions (via licensed aggregator)</li>
+          <li>Process cash redemptions (KYC Tier 2+, batched payouts via Flutterwave)</li>
           <li>Prevent fraud (honeypot, consent freshness, unique phone, trust score, human review)</li>
           <li>Resolve disputes and enforce anti-MLM rules</li>
           <li>Comply with NDPA, SEC, and financial regulations</li>
@@ -106,9 +106,8 @@
         <ul>
           <li><strong>Termii (SMS/WhatsApp OTP):</strong> Phone number only, for verification.</li>
           <li><strong>Data Aggregator (MTN/Glo/Airtel bundles):</strong> Phone + network only, for fulfillment.</li>
-          <li><strong>Payment Gateway (Flutterwave/Paystack):</strong> Bank details only, for cash payouts.</li>
-          <li><strong>KYC Provider (Smile Identity/VerifyMe):</strong> Identity documents, for verification.</li>
-          <li><strong>Platform APIs (YouTube/Facebook):</strong> Public profile + follower count, via OAuth.</li>
+          <li><strong>Flutterwave (Cash payouts):</strong> Bank details only, for cash redemption.</li>
+          <li><strong>KYC Provider (Smile Identity/VerifyMe):</strong> Identity documents, for cash unlock verification.</li>
           <li><strong>Legal/Regulatory:</strong> When required by Nigerian law or court order.</li>
         </ul>
         <p>We never sell personal data. Referral codes show masked inviter name only (First Last-initial).</p>
@@ -117,7 +116,7 @@
       <section>
         <h2>6. Data Retention</h2>
         <ul>
-          <li>Lead capture data: 2 years from last activity, or until deletion request.</li>
+          <li>Registration data: 2 years from last activity, or until deletion request.</li>
           <li>Verified promoter data: 7 years (financial records) or until deletion request.</li>
           <li>KYC/AML data: 7 years per CBN regulations.</li>
           <li>Dispute records: 3 years after resolution.</li>
