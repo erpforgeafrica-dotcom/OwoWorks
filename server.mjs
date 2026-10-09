@@ -1,28 +1,33 @@
 #!/usr/bin/env node
 /**
- * Promota production web server.
+ * Promota production web + API server.
  *
  * Serves the static site in apps/web and injects window.PROMOTA at runtime
  * from environment variables (SUPABASE_URL, SUPABASE_ANON_KEY). Nothing is
  * baked into the image, so the same build works in every environment and no
  * backend key is ever committed. The key it serves is the publishable key,
  * which is public by design: database grants and row-level security are the
- * enforcement, and the only public write path is the submit_lead function.
+ * enforcement for the browser, and the API below is the trusted path.
  *
- * If the variables are absent the config is empty and the site reports that it
- * is not connected - it never pretends to have sent anything.
+ * It also hosts the JSON API under /api. The API holds the service-role key
+ * and is the ONLY writer of money-adjacent rows; the browser is stopped by RLS,
+ * exactly as db/live.proof.mjs proves over HTTPS.
  *
- * Binds 0.0.0.0 so the container is reachable behind Railway's edge proxy.
+ * Zero dependencies on purpose: the Dockerfile runs no `npm install`, so this
+ * uses nothing but Node built-ins.
  */
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { join, dirname, extname, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { routes, submitTask } from './api/routes.mjs';
+import * as worker from './api/worker.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const WWW = join(ROOT, 'apps', 'web');
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || '0.0.0.0';
+const START_WORKER = process.env.WORKER_ENABLED !== 'false';
 
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim();
 const SUPABASE_ANON_KEY = (process.env.SUPABASE_ANON_KEY || '').trim();
@@ -43,33 +48,39 @@ const TYPES = {
 
 const CACHEABLE = new Set(['.png', '.webp', '.svg', '.ico']);
 
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX_REQUESTS = 30;
-const rateLimitMap = new Map();
+/* ------------------------------------------------------------- rate limiting */
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = Number(process.env.RATE_LIMIT_PER_MIN || 60);
+const rateBuckets = new Map();
 
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const windowStart = now - RATE_LIMIT_WINDOW_MS;
-
-  const requests = rateLimitMap.get(ip) || [];
-  const recentRequests = requests.filter(t => t > windowStart);
-
-  if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
-    return false;
-  }
-
-  recentRequests.push(now);
-  rateLimitMap.set(ip, recentRequests);
-  return true;
-}
-
-function getClientIp(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
-    || req.headers['x-real-ip']
+function clientIp(req) {
+  return req.headers['x-real-ip']
+    || req.headers['x-forwarded-for']?.split(',')[0]?.trim()
     || req.socket?.remoteAddress
     || 'unknown';
 }
 
+/** Sliding window per IP. Returns retry-after seconds when throttled. */
+function rateLimited(ip) {
+  const now = Date.now();
+  const cut = now - RATE_WINDOW_MS;
+  const hits = (rateBuckets.get(ip) || []).filter(t => t > cut);
+  if (hits.length >= RATE_MAX) {
+    rateBuckets.set(ip, hits);
+    return Math.ceil((hits[0] + RATE_WINDOW_MS - now) / 1000);
+  }
+  hits.push(now);
+  rateBuckets.set(ip, hits);
+  // opportunistic cleanup so the map cannot grow without bound
+  if (rateBuckets.size > 5000) {
+    for (const [k, v] of rateBuckets) {
+      if (!v.some(t => t > cut)) rateBuckets.delete(k);
+    }
+  }
+  return 0;
+}
+
+/* ------------------------------------------------------------------- headers */
 const CSP = [
   "default-src 'self'",
   "script-src 'self'",
@@ -102,32 +113,107 @@ function send(res, status, headers, body, headOnly) {
   return headOnly ? res.end() : res.end(body);
 }
 
+const json = (res, status, obj, headOnly) => send(
+  res, status,
+  { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+  JSON.stringify(obj),
+  headOnly,
+);
+
+/* --------------------------------------------------------------- body parsing */
+const MAX_BODY = 64 * 1024;
+
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+    req.on('data', c => {
+      size += c.length;
+      if (size > MAX_BODY) { reject(new Error('request body too large')); req.destroy(); return; }
+      chunks.push(c);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('error', reject);
+  });
+}
+
+/* ------------------------------------------------------------------- routing */
+/**
+ * Exact routes first, then a small pattern table for /api/tasks/:id/submit.
+ * Kept explicit rather than clever: there are ten endpoints.
+ */
+const PATTERNS = [
+  { method: 'POST', re: /^\/api\/tasks\/([0-9a-f-]{36})\/submit$/i, handler: submitTask, params: ['id'] },
+];
+
+async function handleApi(req, res, url) {
+  const key = `${req.method} ${url.pathname}`;
+  const handler = routes[key];
+  const headOnly = req.method === 'HEAD';
+
+  const pattern = PATTERNS.find(p => p.method === req.method && p.re.test(url.pathname));
+  const matched = handler
+    ? { fn: handler, params: {} }
+    : pattern
+      ? {
+          fn: pattern.handler,
+          params: Object.fromEntries(
+            pattern.re.exec(url.pathname).slice(1).map((v, i) => [pattern.params[i], v])
+          ),
+        }
+      : null;
+
+  if (!matched) return json(res, 404, { error: 'no such endpoint' }, headOnly);
+
+  let body = null;
+  let raw = '';
+  if (req.method === 'POST') {
+    raw = await readBody(req);
+    if (raw) {
+      try { body = JSON.parse(raw); }
+      catch { return json(res, 400, { error: 'body must be JSON' }, headOnly); }
+    } else body = {};
+  }
+
+  try {
+    const result = await matched.fn(req, matched.params, raw);
+    if (!result || typeof result.status !== 'number') {
+      return json(res, 500, { error: 'handler returned no response' }, headOnly);
+    }
+    return json(res, result.status, result.body, headOnly);
+  } catch (e) {
+    // never leak a stack trace or a key to the caller
+    console.error('[api]', req.method, url.pathname, '->', String(e.message || e).slice(0, 300));
+    return json(res, 500, { error: 'internal error' }, headOnly);
+  }
+}
+
+/* --------------------------------------------------------------------- server */
 const server = createServer(async (req, res) => {
   const headOnly = req.method === 'HEAD';
   try {
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      return send(res, 405, { ...SECURITY_HEADERS, 'content-type': 'text/plain; charset=utf-8', allow: 'GET, HEAD' }, '405 Method Not Allowed', headOnly);
+    const url = new URL(req.url, 'http://localhost');
+
+    // the API is throttled harder than static reads
+    if (url.pathname.startsWith('/api/') || url.pathname === '/healthz') {
+      const retry = rateLimited(clientIp(req));
+      if (retry) {
+        return json(res, 429, { error: 'slow down' }, headOnly);
+      }
+      return handleApi(req, res, url);
     }
 
-    const url = new URL(req.url, 'http://localhost');
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      return send(res, 405,
+        { ...SECURITY_HEADERS, 'content-type': 'text/plain; charset=utf-8', allow: 'GET, HEAD' },
+        '405 Method Not Allowed', headOnly);
+    }
+
     let rel = decodeURIComponent(url.pathname);
 
     if (rel === '/config.js') {
-      const ip = getClientIp(req);
-      if (!checkRateLimit(ip)) {
-        return send(res, 429, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'retry-after': Math.ceil(RATE_LIMIT_WINDOW_MS / 1000) }, JSON.stringify({ error: 'Rate limit exceeded' }), headOnly);
-      }
       const body = Buffer.from(runtimeConfigBody(), 'utf8');
       return send(res, 200, { ...SECURITY_HEADERS, 'content-type': 'text/javascript; charset=utf-8', 'content-length': body.length, 'cache-control': 'no-store' }, body, headOnly);
-    }
-
-    if (rel === '/healthz') {
-      const ip = getClientIp(req);
-      if (!checkRateLimit(ip)) {
-        return send(res, 429, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'retry-after': Math.ceil(RATE_LIMIT_WINDOW_MS / 1000) }, JSON.stringify({ error: 'Rate limit exceeded' }), headOnly);
-      }
-      const body = Buffer.from(JSON.stringify({ ok: true, config: CONFIGURED }), 'utf8');
-      return send(res, 200, { ...SECURITY_HEADERS, 'content-type': 'application/json; charset=utf-8', 'content-length': body.length, 'cache-control': 'no-store' }, body, headOnly);
     }
 
     if (rel === '/' || rel.endsWith('/')) rel += 'index.html';
@@ -156,5 +242,7 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`promota web listening on http://${HOST}:${PORT} (supabase configured: ${CONFIGURED})`);
+  console.log(`promota web+api listening on http://${HOST}:${PORT} (supabase configured: ${CONFIGURED})`);
+  if (START_WORKER) worker.start();
+  else console.log('[worker] disabled via WORKER_ENABLED=false');
 });
