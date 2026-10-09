@@ -200,6 +200,7 @@ const server = createServer(async (req, res) => {
       if (retry) {
         return json(res, 429, { error: 'slow down' }, headOnly);
       }
+      res.setHeader('X-RateLimit-Remaining', String(RATE_MAX));
       return handleApi(req, res, url);
     }
 
